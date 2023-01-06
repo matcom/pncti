@@ -1,0 +1,9 @@
+streamlit
+fastapi
+uvicorn
+pyyaml
+openpyxl
+levenshtein
+pyscript
+itsdangerous
+extra_streamlit_components

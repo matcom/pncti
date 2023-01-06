@@ -1,0 +1,34 @@
+convocatoria:
+  header:
+    ⭐ Bienvenido a la Convocatoria 2023 para el Programa Nacional de Ciencias Básicas
+  top_msg:
+    En esta página usted puede aplicar a la convocatoria y monitorear todo el estado de su aplicación.
+  new_msg:
+    ℹ️ Para realizar una nueva aplicación, usted debe subir los documentos relacionados a continuación.
+    Puede descargar el modelo correspondiente a cada documento en esta misma página.
+  anexo_3:
+    El Anexo 3 contiene la Ficha Técnica del Proyecto, incluyendo todos los detalles
+    sobre el alcance, los objetivos, y los participantes del proyecto.
+  aval_cc:
+    El Aval del Consejo Científico (o Consejo Técnico Asesor) de la entidad ejecutora principal
+    es un documento que avala la experticia técnica de los participantes, así como la disposición
+    de los mismos, a ejecutar todas las tareas planificadas durante el período que dure el Proyecto.
+  presupuesto:
+    El Presupuesto es un documento que describe en detalle la distribución de fondos que necesita
+    el Proyecto para ejecutar todas las tareas propuestas, incluyendo remuneración,
+    costos directos e indirectos, e inversiones.
+  success:
+    Toda la información requerida está lista para enviar. Haga click en **Enviar aplicación** para completar el proceso.
+  missing:
+    Falta información por completar, revise el formulario anterior.
+auth:
+  Gestor de Proyecto:
+    El Gestor de Proyecto tiene acceso a toda la información del Proyecto, y es el responsable
+    de subir la información necesaria para evaluar el Proyecto en cada etapa.
+    Además, puede aplicar a convocatorias.
+  Gestor de Programa:
+    El Gestor de Programa tiene accesso a toda la información del Programa, puede asignar
+    evaluadores, generar y aprobar anexos, y gestionar todo el flujo de información.
+  Experto:
+    El Experto es el encargado de evaluar el estado de ejecución de los diferentes proyectos
+    que le son asignados por el Gestor de Programa.

@@ -1,0 +1,10 @@
+Link de autenticación para PNCTI
+
+Estimado usuario:
+
+Haga click en el siguiente link para registrarse en el Sistema de Gestión de Programas Nacionales
+con el rol de $role:
+
+$link
+
+Si el link no funciona al hacer click, copiélo y péguelo directo en un navegador.
