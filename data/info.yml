@@ -3,12 +3,23 @@ convocatoria:
     ⭐ Bienvenido a la Convocatoria 2023 para el Programa Nacional de Ciencias Básicas
   top_msg:
     En esta página usted puede aplicar a la convocatoria y monitorear todo el estado de su aplicación.
+  basico:
+    "Escoja un título claro y preciso, que indique el problema a resolver.
+    \n\n
+    Los tipos de proyecto disponibles son:\n
+    - **Investigación Básica**: Cuando el objetivo fundamental es producir conocimiento nuevo.\n
+    - **Investigación Aplicada y Desarrollo**: Cuando el objetivo fundamental es producir tecnologías o herramientas para utilizar en la práctica.\n
+    - **Innovación**: Cuando el objetivo fundamental es generar modelos de negocio novedosos a partir de conocimiento y/o tecnologías existentes.\n
+    "
   new_msg:
     ℹ️ Para realizar una nueva aplicación, usted debe subir los documentos relacionados a continuación.
     Puede descargar el modelo correspondiente a cada documento en esta misma página.
   anexo_3:
-    El Anexo 3 contiene la Ficha Técnica del Proyecto, incluyendo todos los detalles
+    "El Anexo 3 contiene la Ficha Técnica del Proyecto, incluyendo todos los detalles
     sobre el alcance, los objetivos, y los participantes del proyecto.
+    \n\n
+    Asegúrese de que el título y tipo de proyecto coincide con el declarado en este formulario.
+    "
   aval_cc:
     El Aval del Consejo Científico (o Consejo Técnico Asesor) de la entidad ejecutora principal
     es un documento que avala la experticia técnica de los participantes, así como la disposición

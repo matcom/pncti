@@ -1,3 +1,4 @@
+import time
 import streamlit as st
 import yaml
 import auth
@@ -19,104 +20,104 @@ if st.session_state.role != "Dirección de Proyecto":
     st.warning("⚠️ Esta sección solo está disponible para el rol de **Dirección de Proyecto**.")
     st.stop()
 
-new_app, app_state = st.tabs(["🪄 Nueva aplicación", "✅ Estado de su aplicación"])
 
-with new_app:
-    st.info(
-        info['new_msg']
+
+def send_application(title, project_type, anexo3, avalCC, presupuesto):
+    st.session_state.title = ""
+    st.session_state.project_type = ""
+    del st.session_state.anexo3
+    del st.session_state.avalCC
+    del st.session_state.presupuesto
+
+    st.success("#### ¡Su aplicación ha sido guardada con éxito!")
+
+
+st.info(
+    info['new_msg']
+)
+
+st.write("### Datos del Proyecto")
+
+left, right = st.columns(2)
+
+with right:
+    st.info(info["basico"])
+
+with left:
+    title = st.text_input("Título del proyecto", key="title")
+    project_type = st.selectbox("Tipo de proyecto", ["", "Investigación Básica", "Investigación Aplicada y Desarrollo", "Innovación"], key="project_type")
+
+    if len(title.split()) > 5 and project_type:
+        st.success("✅ Título y tipo de proyecto definido correctamente.")
+    else:
+        st.warning("⚠️ Debe definir un título (no menor de 5 palabras) y el tipo del proyecto antes de continuar con la aplicación")
+        st.stop()
+
+
+ready = True
+
+st.write("### Anexo 3")
+
+left, right = st.columns(2)
+
+with left:
+    anexo3 = st.file_uploader("Subir Anexo 3", ["docx"], key="anexo3")
+
+    st.download_button(
+        "⏬ Descargar Modelo", open("/src/data/docs/Anexo-3.docx", "rb").read(), file_name="Anexo-3.docx"
     )
 
-    ready = True
-
-    st.write("### Anexo 3")
-
-    left, right = st.columns(2)
-
-    with left:
-        fp = st.file_uploader("Subir Anexo 3")
-        st.download_button(
-            "⏬ Descargar Modelo", "Modelo del anexo 3", file_name="Anexo3.txt"
-        )
-
-        if fp:
-            st.success("✅ Anexo 3 verificado.")
-        else:
-            st.error("❎ Falta Anexo 3")
-            ready = False
-
-    with right:
-        st.info("ℹ️ **Sobre el Anexo 3**\n\n" + info['anexo_3'])
-
-
-    st.write("### Aval del Consejo Científico")
-
-    left, right = st.columns(2)
-
-    with left:
-        fp = st.file_uploader("Subir Aval del CC")
-        st.download_button(
-            "⏬ Descargar Modelo", "Modelo del Aval del CC", file_name="AvalCC.txt"
-        )
-
-        if fp:
-            st.success("✅ Aval del CC verificado.")
-        else:
-            st.error("❎ Falta Aval del CC")
-            ready = False
-
-    with right:
-        st.info("ℹ️ **Sobre el Aval del CC**\n\n" + info['aval_cc'])
-
-
-    st.write("### Presupuesto")
-
-    left, right = st.columns(2)
-
-    with left:
-        fp = st.file_uploader("Subir Presupuesto")
-        st.download_button(
-            "⏬ Descargar Modelo", "Modelo del Presupuesto", file_name="Presupuesto.txt"
-        )
-
-        if fp:
-            st.success("✅ Presupuesto.")
-        else:
-            st.error("❎ Falta Presupuesto")
-            ready = False
-
-    with right:
-        st.info("ℹ️ **Sobre el Presupuesto**\n\n" + info['presupuesto'])
-
-    st.write("---")
-
-    if ready:
-        st.success("✅ " + info['success'])
-        st.button("⬆️ Enviar aplicación")
+    if anexo3:
+        st.success("✅ Anexo 3 verificado.")
     else:
-        st.warning("⚠️ " + info['missing'])
+        st.error("⚠️ Falta Anexo 3")
+        ready = False
+
+with right:
+    st.info(f"ℹ️ **Sobre el Anexo 3**\n\n{info['anexo_3']}\n\n_{title}_ - _{project_type}_")
 
 
-with app_state:
-    st.info("Usted tiene 2 aplicaciones en el sistema.")
+st.write("### Aval del Consejo Científico")
 
-    info = st.selectbox("Seleccione título de la aplicación", ["Aplicación 1", "Aplicación 2"])
+left, right = st.columns(2)
 
-    st.write("### Estado de la aplicación")
+with left:
+    avalCC = st.file_uploader("Subir Aval del CC", ["docx"], key="avalCC")
 
-    if info == "Aplicación 1":
-        st.success("✅ Revisado el Anexo 3")
-        st.success("✅ Revisado el Aval del CC")
-        st.error("❎ Error en el Presupuesto")
-        st.download_button("🔽 Descargar comentarios", "Nada que ver aquí", "Informe.txt")
-        if st.file_uploader("Volver a subir Presupuesto"):
-            st.button("👍 Aplicar cambios")
-
+    if avalCC:
+        st.success("✅ Aval del CC verificado.")
     else:
-        st.success("✅ Revisado el Anexo 3")
-        st.success("✅ Revisado el Aval del CC")
-        st.success("✅ Revisado el Presupuesto")
-        st.success("✅ Asignado ID de Proyecto: **004**")
-        st.success("✅ Informe del Experto 1")
-        st.warning("⌛ Falta informe del Experto 2")
-        st.warning("⌛ Falta evaluación del Presupuesto")
-        st.warning("⌛ Falta evaluación del Impacto Social")
+        st.error("⚠️ Falta Aval del CC")
+        ready = False
+
+with right:
+    st.info("ℹ️ **Sobre el Aval del CC**\n\n" + info['aval_cc'])
+
+
+st.write("### Presupuesto")
+
+left, right = st.columns(2)
+
+with left:
+    presupuesto = st.file_uploader("Subir Presupuesto", ["xlsx"], key="presupuesto")
+
+    st.download_button(
+        "⏬ Descargar Modelo", open("/src/data/docs/Presupuesto.xlsx", "rb").read(), file_name="Presupuesto.xlsx"
+    )
+
+    if presupuesto:
+        st.success("✅ Presupuesto verificado.")
+    else:
+        st.error("⚠️ Falta Presupuesto")
+        ready = False
+
+with right:
+    st.info("ℹ️ **Sobre el Presupuesto**\n\n" + info['presupuesto'])
+
+st.write("---")
+
+if ready:
+    st.success("✅ " + info['success'])
+    st.button("⬆️ Enviar aplicación", on_click=send_application, args=(title, project_type, anexo3, avalCC, presupuesto))
+else:
+    st.warning("⚠️ " + info['missing'])
