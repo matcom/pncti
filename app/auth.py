@@ -10,11 +10,13 @@ info = yaml.safe_load(open("/src/app/info.yml"))['auth']
 cookie = "PNCTI-AuthToken"
 
 
-def login(user):
+def login(user, role, program):
     st.session_state.user = user
+    st.session_state.role = role
+    st.session_state.program = program
     st.experimental_set_query_params()
-    st.sidebar.info(f"Bienvenido **{user}**")
-    set_token_in_cookies(generate_signin_token(user))
+    st.sidebar.info(f"Bienvenido **{user}**\n\nRol: **{role}**\n\nPrograma: **{program}**")
+    set_token_in_cookies(generate_signin_token(user, role, program))
     st.sidebar.button("🚪 Cerrar sesión", on_click=logout)
 
     return user
@@ -29,28 +31,31 @@ def authenticate():
     token = st.experimental_get_query_params().get('token')
 
     if token:
-        user = verify_token(token[0])
+        credentials = verify_token(token[0])
 
-        if user is not None:
-            return login(user)
+        if credentials is not None:
+            return login(*credentials)
         else:
             st.error("El token de autenticación es inválido. Vuelva a intentarlo.")
     elif "user" in st.session_state:
         user = st.session_state.user
-        return login(user)
+        role = st.session_state.role
+        program = st.session_state.program
+        return login(user, role, program)
     else:
         token = get_token_from_cookies()
-        user = verify_token(token)
+        credentials = verify_token(token)
 
-        if user is not None:
-            return login(user)
+        if credentials is not None:
+            return login(*credentials)
 
     st.warning("⚠️ Antes de continuar, debe registrarse en la plataforma.")
 
     left, right = st.columns(2)
 
     with left:
-        role = st.selectbox("Seleccione el rol que desea acceder", ["Gestor de Proyecto", "Experto", "Gestor de Programa"])
+        role = st.selectbox("Seleccione el rol que desea acceder", ["Jefe de Proyecto", "Experto", "Gestor de Programa"])
+        program = st.selectbox("Seleccione el Programa", ["PNCB - Ciencias Básicas", "HCS - Humanidades y Ciencias Sociales", "TIS - Telecomunicaciones e Informatización de la Sociedad"])
         email = st.text_input("Introduza su dirección correo electrónico")
     with right:
         st.info(info[role])
@@ -58,20 +63,27 @@ def authenticate():
     if email:
         st.info(f"""
             Haga click en el botón siguiente y le enviaremos a **{email}** un enlace de autenticación que
-            le permitirá acceder a la plataforma con el rol de **{role}**.
+            le permitirá acceder a la plataforma con el rol de **{role}** en el programa **{program}**.
         """)
 
         if st.button("📧 Enviar enlace de autenticación"):
-            token = generate_signin_token(email)
-            send_from_template("login", email, role=role, link=f"http://localhost:8501?token={token}")
-            st.success("El enlace de autenticación ha sido enviado. Verifique su correo.")
+            token = generate_signin_token(email, role, program)
+            try:
+                send_from_template("login", email, role=role, program=program, link=f"http://localhost:8501?token={token}")
+                st.success("El enlace de autenticación ha sido enviado. Verifique su correo.")
+            except Exception as e:
+                st.error("**ERROR**: " + str(e))
+
+                with st.expander("Ver detalles del error"):
+                    st.exception(e)
 
     st.stop()
 
 
-def generate_signin_token(username):
+def generate_signin_token(user, role, program):
+    program = program.split("-")[0].strip()
     serializer = URLSafeTimedSerializer(os.getenv("SECRET"))
-    return serializer.dumps(username)
+    return serializer.dumps(f"{user}::{role}::{program}")
 
 
 def verify_token(token):
@@ -81,7 +93,7 @@ def verify_token(token):
     serializer = URLSafeTimedSerializer(os.getenv("SECRET"))
 
     try:
-        return serializer.loads(token, max_age=3600)
+        return serializer.loads(token, max_age=3600).split("::")
     except BadData:
         return None
 

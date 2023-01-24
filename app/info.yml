@@ -22,7 +22,7 @@ convocatoria:
   missing:
     Falta información por completar, revise el formulario anterior.
 auth:
-  Gestor de Proyecto:
+  Jefe de Proyecto:
     El Gestor de Proyecto tiene acceso a toda la información del Proyecto, y es el responsable
     de subir la información necesaria para evaluar el Proyecto en cada etapa.
     Además, puede aplicar a convocatorias.
