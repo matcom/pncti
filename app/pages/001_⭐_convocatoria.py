@@ -3,7 +3,7 @@ import yaml
 import auth
 
 st.set_page_config(page_title="PNCTI (Demo)", page_icon="⭐", layout="wide")
-info = yaml.safe_load(open("/src/app/info.yml"))['convocatoria']
+info = yaml.safe_load(open("/src/data/info.yml"))['convocatoria']
 
 st.header(
     info['header']
@@ -14,6 +14,10 @@ st.write(
 )
 
 user = auth.authenticate()
+
+if st.session_state.role != "Dirección de Proyecto":
+    st.warning("⚠️ Esta sección solo está disponible para el rol de **Dirección de Proyecto**.")
+    st.stop()
 
 new_app, app_state = st.tabs(["🪄 Nueva aplicación", "✅ Estado de su aplicación"])
 

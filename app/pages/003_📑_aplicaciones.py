@@ -8,6 +8,10 @@ st.header('📑 Aplicaciones')
 
 user = auth.authenticate()
 
+if st.session_state.role != "Dirección de Programa":
+    st.warning("⚠️ Esta sección solo está disponible para el rol de **Dirección de Programa**.")
+    st.stop()
+
 st.info("En el sistema hay **14** aplicaciones")
 
 app = st.selectbox("Seleccione una aplicación", ["Aplicación %i" % i for i in range(1,15)])

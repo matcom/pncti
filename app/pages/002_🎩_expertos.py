@@ -7,6 +7,10 @@ st.header('🎩 Expertos')
 
 user = auth.authenticate()
 
+if st.session_state.role != "Experto":
+    st.warning("⚠️ Esta sección solo está disponible para el rol de **Experto**.")
+    st.stop()
+
 st.info("Usted tiene asignados **3** aplicaciones a revisar.")
 
 app = st.selectbox("Seleccione la aplicación", ["Aplicación %i" %i for i in range(1,4)])

@@ -6,7 +6,8 @@ from itsdangerous.exc import BadData
 import yaml
 import os
 
-info = yaml.safe_load(open("/src/app/info.yml"))['auth']
+info = yaml.safe_load(open("/src/data/info.yml"))['auth']
+roles = yaml.safe_load(open("/src/data/roles.yml"))
 cookie = "PNCTI-AuthToken"
 
 
@@ -18,6 +19,11 @@ def login(user, role, program):
     st.sidebar.info(f"Bienvenido **{user}**\n\nRol: **{role}**\n\nPrograma: **{program}**")
     set_token_in_cookies(generate_signin_token(user, role, program))
     st.sidebar.button("🚪 Cerrar sesión", on_click=logout)
+
+    if user == os.getenv("ADMIN"):
+        st.write('---')
+        new_role = st.sidebar.selectbox("Cambiar rol", ["Dirección de Proyecto", "Experto", "Dirección de Programa", "Apoyo de Programa"])
+        st.sidebar.button("🪄 Cambiar rol", on_click=login, args=(user, new_role, program))
 
     return user
 
@@ -55,12 +61,17 @@ def authenticate():
 
     with left:
         role = st.selectbox("Seleccione el rol que desea acceder", ["Dirección de Proyecto", "Experto", "Dirección de Programa", "Apoyo de Programa"])
-        program = st.selectbox("Seleccione el Programa", ["PNCB - Ciencias Básicas", "HCS - Humanidades y Ciencias Sociales"]) #, "TIS - Telecomunicaciones e Informatización de la Sociedad"])
+        program = st.selectbox("Seleccione el Programa", ["PNCB - Ciencias Básicas", "CSH - Ciencias Sociales y Humanidades"]) #, "TIS - Telecomunicaciones e Informatización de la Sociedad"])
+        program = program.split('-')[0].strip()
         email = st.text_input("Introduza su dirección correo electrónico")
     with right:
         st.info("ℹ️ " + info[role])
 
     if email:
+        if not check_email_role(email, program, role):
+            st.error(f"El correo electrónico **{email}** no tiene permitido el rol **{role}** en el programa **{program}**.")
+            st.stop()
+
         st.info(f"""
             Haga click en el botón siguiente y le enviaremos a **{email}** un enlace de autenticación que
             le permitirá acceder a la plataforma con el rol de **{role}** en el programa **{program}**.
@@ -80,8 +91,17 @@ def authenticate():
     st.stop()
 
 
+def check_email_role(email, program, role):
+    if role == "Dirección de Proyecto":
+        return True
+
+    if email == os.getenv("ADMIN"):
+        return True
+
+    return email in roles[program][role]
+
+
 def generate_signin_token(user, role, program):
-    program = program.split("-")[0].strip()
     serializer = URLSafeTimedSerializer(os.getenv("SECRET"))
     return serializer.dumps(f"{user}::{role}::{program}")
 
