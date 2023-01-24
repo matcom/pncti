@@ -3,6 +3,9 @@ import streamlit as st
 import yaml
 import auth
 
+from models import Application
+
+
 st.set_page_config(page_title="PNCTI (Demo)", page_icon="⭐", layout="wide")
 info = yaml.safe_load(open("/src/data/info.yml"))['convocatoria']
 
@@ -21,15 +24,17 @@ if st.session_state.role != "Dirección de Proyecto":
     st.stop()
 
 
-
 def send_application(title, project_type, anexo3, avalCC, presupuesto):
+    app = Application(title=title, project_type=project_type, owner=st.session_state.user)
+    app.create(anexo3=anexo3, avalCC=avalCC, presupuesto=presupuesto)
+
     st.session_state.title = ""
     st.session_state.project_type = ""
     del st.session_state.anexo3
     del st.session_state.avalCC
     del st.session_state.presupuesto
 
-    st.success("#### ¡Su aplicación ha sido guardada con éxito!")
+    st.success("**🥳 ¡Su aplicación ha sido guardada con éxito!**")
 
 
 st.info(
