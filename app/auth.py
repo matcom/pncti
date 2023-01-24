@@ -54,11 +54,11 @@ def authenticate():
     left, right = st.columns(2)
 
     with left:
-        role = st.selectbox("Seleccione el rol que desea acceder", ["Jefe de Proyecto", "Experto", "Gestor de Programa"])
-        program = st.selectbox("Seleccione el Programa", ["PNCB - Ciencias Básicas", "HCS - Humanidades y Ciencias Sociales", "TIS - Telecomunicaciones e Informatización de la Sociedad"])
+        role = st.selectbox("Seleccione el rol que desea acceder", ["Dirección de Proyecto", "Experto", "Dirección de Programa", "Apoyo de Programa"])
+        program = st.selectbox("Seleccione el Programa", ["PNCB - Ciencias Básicas", "HCS - Humanidades y Ciencias Sociales"]) #, "TIS - Telecomunicaciones e Informatización de la Sociedad"])
         email = st.text_input("Introduza su dirección correo electrónico")
     with right:
-        st.info(info[role])
+        st.info("ℹ️ " + info[role])
 
     if email:
         st.info(f"""

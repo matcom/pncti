@@ -22,13 +22,15 @@ convocatoria:
   missing:
     Falta información por completar, revise el formulario anterior.
 auth:
-  Jefe de Proyecto:
-    El Gestor de Proyecto tiene acceso a toda la información del Proyecto, y es el responsable
+  Dirección de Proyecto:
+    El Gestor o Jefe de Proyecto tiene acceso a toda la información del Proyecto, y es el responsable
     de subir la información necesaria para evaluar el Proyecto en cada etapa.
     Además, puede aplicar a convocatorias.
-  Gestor de Programa:
-    El Gestor de Programa tiene accesso a toda la información del Programa, puede asignar
+  Dirección de Programa:
+    El Gestor o Jefe de Programa tiene accesso a toda la información del Programa, puede asignar
     evaluadores, generar y aprobar anexos, y gestionar todo el flujo de información.
   Experto:
     El Experto es el encargado de evaluar el estado de ejecución de los diferentes proyectos
     que le son asignados por el Gestor de Programa.
+  Apoyo de Programa:
+    El rol de Apoyo es encargado de evaluar la dimensión social o financiera, según sea asignado, de todos los proyectos.
