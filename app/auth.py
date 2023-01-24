@@ -21,7 +21,6 @@ def login(user, role, program):
     st.sidebar.button("🚪 Cerrar sesión", on_click=logout)
 
     if user == os.getenv("ADMIN"):
-        st.write('---')
         new_role = st.sidebar.selectbox("Cambiar rol", ["Dirección de Proyecto", "Experto", "Dirección de Programa", "Apoyo de Programa"])
         st.sidebar.button("🪄 Cambiar rol", on_click=login, args=(user, new_role, program))
 
@@ -55,7 +54,7 @@ def authenticate():
         if credentials is not None:
             return login(*credentials)
 
-    st.warning("⚠️ Antes de continuar, debe registrarse en la plataforma.")
+    st.warning("⚠️ Antes de continuar, debe autenticarse en la plataforma.")
 
     left, right = st.columns(2)
 

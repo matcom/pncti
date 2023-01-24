@@ -4,4 +4,5 @@ Usted está logueado como **{user}** con el rol de **{role}** en el programa **{
 
 A la izquierda encontrará una barra de navegación con los vínculos a las secciones del sistema.
 
-- En la sección **⭐ convocatoria** podrá aplicar a nuevas convocatorias o verificar el estado de sus aplicaciones.
+- En la sección **⭐ convocatoria** podrá aplicar a nuevas convocatorias.
+- En la sección **📑 aplicaciones** podrá ver el estado de sus aplicaciones.

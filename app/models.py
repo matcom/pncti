@@ -1,8 +1,9 @@
 from uuid import UUID, uuid4
+from pathlib import Path
 
 from pydantic import BaseModel, Field
 from fastapi.encoders import jsonable_encoder
-from yaml import safe_dump
+from yaml import safe_dump, safe_load
 
 
 class Application(BaseModel):
@@ -30,3 +31,18 @@ class Application(BaseModel):
             safe_dump(jsonable_encoder(self.dict()), fp)
 
         return uuid
+
+    def file(self, file_name):
+        prefix, extension = file_name.split(".")
+        uuid = str(self.uuid)
+        file_name = f"/src/data/applications/{prefix}-{uuid}.{extension}"
+
+        return open(file_name, "rb")
+
+    @classmethod
+    def load_from(cls, user):
+        for file in Path("/src/data/applications").glob("*.yml"):
+            app = Application(**safe_load(file.open()))
+
+            if app.owner == user:
+                yield app
