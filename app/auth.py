@@ -78,8 +78,9 @@ def authenticate():
 
         if st.button("📧 Enviar enlace de autenticación"):
             token = generate_signin_token(email, role, program)
+            host = os.getenv("HOSTNAME")
             try:
-                send_from_template("login", email, role=role, program=program, link=f"http://localhost:8501?token={token}")
+                send_from_template("login", email, role=role, program=program, link=f"http://{host}?token={token}")
                 st.success("El enlace de autenticación ha sido enviado. Verifique su correo.")
             except Exception as e:
                 st.error("**ERROR**: " + str(e))

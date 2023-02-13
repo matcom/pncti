@@ -9,6 +9,7 @@ services:
       - EMAIL_PASSWORD=${EMAIL_PASSWORD}
       - SECRET=${SECRET}
       - ADMIN=${ADMIN}
+      - HOSTNAME=${HOSTNAME}
     user: ${USER}
     ports:
       - "8501:8501"
