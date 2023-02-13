@@ -4,7 +4,7 @@ dev:
 
 .PHONY: stage
 stage:
-	USER=1000 sudo docker-compose up --force-recreate -d
+	USER=1000 sudo docker-compose up --force-recreate -d app
 
 .PHONY: prod
 app:
