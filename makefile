@@ -2,9 +2,13 @@
 dev:
 	USER=`id -u` docker compose up app
 
-.PHONY: app
+.PHONY: stage
+stage:
+	USER=1000 sudo docker-compose up --force-recreate -d
+
+.PHONY: prod
 app:
-	USER=`id -u` docker-compose up --force-recreate -d
+	USER=1000 sudo docker-compose up --force-recreate -d
 
 .PHONY: install
 install:
