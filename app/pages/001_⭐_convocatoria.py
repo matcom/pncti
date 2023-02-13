@@ -1,4 +1,3 @@
-import time
 import streamlit as st
 import yaml
 import auth
@@ -25,7 +24,7 @@ if st.session_state.role != "Dirección de Proyecto":
 
 
 def send_application(title, project_type, anexo3, avalCC, presupuesto):
-    app = Application(title=title, project_type=project_type, owner=st.session_state.user)
+    app = Application(title=title, project_type=project_type, program=st.session_state.program, owner=st.session_state.user)
     app.create(anexo3=anexo3, avalCC=avalCC, presupuesto=presupuesto)
 
     st.session_state.title = ""
