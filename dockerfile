@@ -1,4 +1,4 @@
-FROM python:3.8
+FROM docker.uclv.cu/python:3.8
 
 COPY requirements.txt /src/requirements.txt
 
