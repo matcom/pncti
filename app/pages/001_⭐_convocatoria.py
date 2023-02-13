@@ -1,6 +1,7 @@
 import streamlit as st
 import yaml
 import auth
+from tools import check_file
 
 st.set_page_config(page_title="PNCTI (Demo)", page_icon="⭐", layout="wide")
 info = yaml.safe_load(open("/src/data/info.yml"))['convocatoria']
@@ -34,15 +35,17 @@ with new_app:
 
     with left:
         fp = st.file_uploader("Subir Anexo 3")
-        st.download_button(
-            "⏬ Descargar Modelo", "Modelo del anexo 3", file_name="Anexo3.txt"
-        )
-
-        if fp:
-            st.success("✅ Anexo 3 verificado.")
-        else:
-            st.error("❎ Falta Anexo 3")
-            ready = False
+        with open("/src/data/docs/Anexo-3.docx", 'rb') as file:
+            st.download_button(
+                label="⏬ Descargar Modelo", 
+                data=file, 
+                file_name="Anexo-3.docx"
+            )
+            if check_file(fp, 'Anexo-3.docx'):
+                st.success("✅ Anexo 3 verificado.")
+            else:
+                st.error("❎ Falta Anexo 3")
+                ready = False
 
     with right:
         st.info("ℹ️ **Sobre el Anexo 3**\n\n" + info['anexo_3'])
@@ -55,7 +58,9 @@ with new_app:
     with left:
         fp = st.file_uploader("Subir Aval del CC")
         st.download_button(
-            "⏬ Descargar Modelo", "Modelo del Aval del CC", file_name="AvalCC.txt"
+            label="⏬ Descargar Modelo", 
+            data="Modelo del Aval del CC", 
+            file_name="AvalCC.pdf"
         )
 
         if fp:
@@ -74,15 +79,18 @@ with new_app:
 
     with left:
         fp = st.file_uploader("Subir Presupuesto")
-        st.download_button(
-            "⏬ Descargar Modelo", "Modelo del Presupuesto", file_name="Presupuesto.txt"
-        )
+        with open("/src/data/docs/Presupuesto.xlsx", 'rb') as file:
+            st.download_button(
+                label="⏬ Descargar Modelo", 
+                data=file, 
+                file_name="Presupuesto.xlsx"
+            )
 
-        if fp:
-            st.success("✅ Presupuesto.")
-        else:
-            st.error("❎ Falta Presupuesto")
-            ready = False
+            if check_file(fp, 'Presupuesto.xlsx'):
+                st.success("✅ Presupuesto verificado.")
+            else:
+                st.error("❎ Falta Presupuesto")
+                ready = False
 
     with right:
         st.info("ℹ️ **Sobre el Presupuesto**\n\n" + info['presupuesto'])

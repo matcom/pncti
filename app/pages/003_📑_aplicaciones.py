@@ -21,9 +21,23 @@ st.write(f"### {app}")
 
 st.write(f"#### Documentación de la aplicación")
 
-st.download_button("🔽 Descargar Anexo 3", "Nada que ver aqui", "Doc.txt")
-st.download_button("🔽 Descargar Aval del CC", "Nada que ver aqui", "Doc.txt")
-st.download_button("🔽 Descargar Presupuesto", "Nada que ver aqui", "Doc.txt")
+st.download_button(
+    label="🔽 Descargar Anexo 3", 
+    data="Nada que ver aqui", 
+    file_name="Anexo-3.docx"
+    )
+
+st.download_button(
+    label="🔽 Descargar Aval del CC", 
+    data="Nada que ver aqui", 
+    file_name="AvalCC.pdf"
+    )
+
+st.download_button(
+    label="🔽 Descargar Presupuesto", 
+    data="Nada que ver aqui", 
+    file_name="Presupuesto.xlsx"
+    )
 
 st.write("#### Revisión (paso 1)")
 

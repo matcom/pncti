@@ -21,8 +21,17 @@ st.write("**Título:**")
 st.write("**Jefe de Proyecto:**")
 st.write("**Entidad Ejecutora Principal:**")
 
-st.download_button("⬇️ Descargar Anexo 3", "Nada que ver aquí", "Anexo3.txt")
-st.download_button("⬇️ Descargar Aval del CC", "Nada que ver aquí", "AvalCC.txt")
+st.download_button(
+    label="⬇️ Descargar Anexo 3", 
+    data="Nada que ver aquí", 
+    file_name="Anexo-3.docx"
+    )
+
+st.download_button(
+    label="⬇️ Descargar Aval del CC", 
+    data="Nada que ver aquí", 
+    file_name="AvalCC.pdf"
+    )
 
 st.write("#### Evaluación")
 

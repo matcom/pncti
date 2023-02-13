@@ -2,7 +2,7 @@ version: '3'
 
 services:
   app:
-    image: apiad/matcom-dashboard:latest
+    image: apiad/matcom-pncti:latest
     build: .
     environment:
       - EMAIL_USERNAME=${EMAIL_USERNAME}
