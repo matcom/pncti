@@ -18,7 +18,7 @@ services:
     command: [ "streamlit", "run", "/src/app/🏠_inicio.py" ]
 
   caddy:
-    image: caddy:latest
+    image: docker.uclv.cu/caddy:latest
     ports:
       - "80:80"
       - "443:443"
