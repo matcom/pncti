@@ -1,6 +1,7 @@
 import streamlit as st
 import yaml
 import auth
+from tools import check_file
 
 from models import Application
 
@@ -71,8 +72,74 @@ with left:
         "⏬ Descargar Modelo", open("/src/data/docs/Anexo-3.docx", "rb").read(), file_name="Anexo-3.docx"
     )
 
-    if anexo3:
-        st.success("✅ Anexo 3 verificado.")
+    ready = True
+
+    st.write("### Anexo 3")
+
+    left, right = st.columns(2)
+
+    with left:
+        fp = st.file_uploader("Subir Anexo 3")
+        with open("/src/data/docs/Anexo-3.docx", 'rb') as file:
+            st.download_button(
+                label="⏬ Descargar Modelo", 
+                data=file, 
+                file_name="Anexo-3.docx"
+            )
+            if check_file(fp, 'Anexo-3.docx'):
+                st.success("✅ Anexo 3 verificado.")
+            else:
+                st.error("❎ Falta Anexo 3")
+                ready = False
+
+    with right:
+        st.info("ℹ️ **Sobre el Anexo 3**\n\n" + info['anexo_3'])
+
+
+    st.write("### Aval del Consejo Científico")
+
+    left, right = st.columns(2)
+
+    with left:
+        fp = st.file_uploader("Subir Aval del CC", ['pdf'])
+
+        if fp:
+            st.success("✅ Aval del CC verificado.")
+        else:
+            st.error("❎ Falta Aval del CC")
+            ready = False
+
+    with right:
+        st.info("ℹ️ **Sobre el Aval del CC**\n\n" + info['aval_cc'])
+
+
+    st.write("### Presupuesto")
+
+    left, right = st.columns(2)
+
+    with left:
+        fp = st.file_uploader("Subir Presupuesto")
+        with open("/src/data/docs/Presupuesto.xlsx", 'rb') as file:
+            st.download_button(
+                label="⏬ Descargar Modelo", 
+                data=file, 
+                file_name="Presupuesto.xlsx"
+            )
+
+            if check_file(fp, 'Presupuesto.xlsx'):
+                st.success("✅ Presupuesto verificado.")
+            else:
+                st.error("❎ Falta Presupuesto")
+                ready = False
+
+    with right:
+        st.info("ℹ️ **Sobre el Presupuesto**\n\n" + info['presupuesto'])
+
+    st.write("---")
+
+    if ready:
+        st.success("✅ " + info['success'])
+        st.button("⬆️ Enviar aplicación")
     else:
         st.error("⚠️ Falta Anexo 3")
         ready = False

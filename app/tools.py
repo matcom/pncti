@@ -1,8 +1,11 @@
 import os
 import smtplib, ssl
+import docx
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from string import Template
+from pathlib import Path
+from openpyxl import load_workbook
 
 
 def send_email(from_email, to_email, subject, text, server):
@@ -41,3 +44,34 @@ def send_from_template(template, to_email, **data):
         sender_email = username
         subject = text.partition('\n')[0]
         send_email(sender_email, to_email, subject, text, server)
+
+def clean_tmp_after_run(func):
+    def wrapper(*args, **kwargs):
+        val = func(*args, **kwargs)
+        for temp_file in Path().glob('_temp.*'):
+            os.remove(temp_file)
+        return val
+    return wrapper
+
+@clean_tmp_after_run
+def check_file(file, document: str) -> bool:
+    if not file:
+        return False
+    d = ''.join(document.split('-'))
+    secure_key = d[:len(d)-5].lower()
+    ext = file.name[-4:]
+    if ext == 'docx':
+        doc = docx.Document(file)
+        if doc.core_properties.keywords == secure_key:
+            return True
+    elif ext == 'xlsx':
+        wb = load_workbook(file)
+        if wb.properties.keywords == secure_key:
+            return True
+    return False
+
+def create_temp(fd, ext):
+    temp = open('_tmp.'+ ext, 'wb')
+    fd = fd.read()
+    temp.write(fd)
+    return temp
