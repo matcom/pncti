@@ -11,7 +11,7 @@ def show_app_state(app):
         st.write(f"#### Documentación de la aplicación")
 
         st.download_button("📄 Descargar Anexo 3", app.file("Anexo3.docx").read(), "Anexo3.docx")
-        st.download_button("📄 Descargar Aval del CC", app.file("AvalCC.docx").read(), "AvalCC.docx")
+        st.download_button("📄 Descargar Aval del CC", app.file("AvalCC.pdf").read(), "AvalCC.pdf")
         st.download_button("📄 Descargar Presupuesto", app.file("Presupuesto.xlsx").read(), "Presupuesto.xlsx")
 
     with left:

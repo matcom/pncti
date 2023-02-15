@@ -25,7 +25,7 @@ if st.session_state.role != "Dirección de Proyecto":
 
 
 def send_application(title, project_type, anexo3, avalCC, presupuesto):
-    app = Application(title=title, project_type=project_type, program=st.session_state.program, owner=st.session_state.user)
+    app = Application(title=title, project_type=project_type, program=st.session_state.program, owner=st.session_state.user, path=st.session_state.path)
     app.create(anexo3=anexo3, avalCC=avalCC, presupuesto=presupuesto)
 
     st.session_state.title = ""
@@ -50,7 +50,7 @@ with right:
 
 with left:
     title = st.text_input("Título del proyecto", key="title")
-    project_type = st.selectbox("Tipo de proyecto", ["", "Investigación Básica", "Investigación Aplicada y Desarrollo", "Innovación"], key="project_type")
+    project_type = st.selectbox("Tipo de proyecto", ["","Investigación Básica", "Investigación Aplicada y Desarrollo", "Innovación"], key="project_type")
 
     if len(title.split()) > 5 and project_type:
         st.success("✅ Título y tipo de proyecto definido correctamente.")
@@ -69,79 +69,12 @@ with left:
     anexo3 = st.file_uploader("Subir Anexo 3", ["docx"], key="anexo3")
 
     st.download_button(
-        "⏬ Descargar Modelo", open("/src/data/docs/Anexo-3.docx", "rb").read(), file_name="Anexo-3.docx"
+        "⏬ Descargar Modelo", open(f"{st.session_state.path}/docs/Anexo-3.docx", "rb").read(), file_name="Anexo-3.docx"
     )
-
-    ready = True
-
-    st.write("### Anexo 3")
-
-    left, right = st.columns(2)
-
-    with left:
-        fp = st.file_uploader("Subir Anexo 3")
-        with open("/src/data/docs/Anexo-3.docx", 'rb') as file:
-            st.download_button(
-                label="⏬ Descargar Modelo", 
-                data=file, 
-                file_name="Anexo-3.docx"
-            )
-            if check_file(fp, 'Anexo-3.docx'):
-                st.success("✅ Anexo 3 verificado.")
-            else:
-                st.error("❎ Falta Anexo 3")
-                ready = False
-
-    with right:
-        st.info("ℹ️ **Sobre el Anexo 3**\n\n" + info['anexo_3'])
-
-
-    st.write("### Aval del Consejo Científico")
-
-    left, right = st.columns(2)
-
-    with left:
-        fp = st.file_uploader("Subir Aval del CC", ['pdf'])
-
-        if fp:
-            st.success("✅ Aval del CC verificado.")
-        else:
-            st.error("❎ Falta Aval del CC")
-            ready = False
-
-    with right:
-        st.info("ℹ️ **Sobre el Aval del CC**\n\n" + info['aval_cc'])
-
-
-    st.write("### Presupuesto")
-
-    left, right = st.columns(2)
-
-    with left:
-        fp = st.file_uploader("Subir Presupuesto")
-        with open("/src/data/docs/Presupuesto.xlsx", 'rb') as file:
-            st.download_button(
-                label="⏬ Descargar Modelo", 
-                data=file, 
-                file_name="Presupuesto.xlsx"
-            )
-
-            if check_file(fp, 'Presupuesto.xlsx'):
-                st.success("✅ Presupuesto verificado.")
-            else:
-                st.error("❎ Falta Presupuesto")
-                ready = False
-
-    with right:
-        st.info("ℹ️ **Sobre el Presupuesto**\n\n" + info['presupuesto'])
-
-    st.write("---")
-
-    if ready:
-        st.success("✅ " + info['success'])
-        st.button("⬆️ Enviar aplicación")
+    if check_file(anexo3, 'Anexo-3.docx'):
+        st.success("✅ Anexo 3 verificado.")
     else:
-        st.error("⚠️ Falta Anexo 3")
+        st.error("❎ Falta Anexo 3")
         ready = False
 
 with right:
@@ -153,7 +86,7 @@ st.write("### Aval del Consejo Científico")
 left, right = st.columns(2)
 
 with left:
-    avalCC = st.file_uploader("Subir Aval del CC", ["docx"], key="avalCC")
+    avalCC = st.file_uploader("Subir Aval del CC", ["pdf"], key="avalCC")
 
     if avalCC:
         st.success("✅ Aval del CC verificado.")
@@ -173,10 +106,10 @@ with left:
     presupuesto = st.file_uploader("Subir Presupuesto", ["xlsx"], key="presupuesto")
 
     st.download_button(
-        "⏬ Descargar Modelo", open("/src/data/docs/Presupuesto.xlsx", "rb").read(), file_name="Presupuesto.xlsx"
+        "⏬ Descargar Modelo", open(f"{st.session_state.path}/docs/Presupuesto.xlsx", "rb").read(), file_name="Presupuesto.xlsx"
     )
 
-    if presupuesto:
+    if check_file(presupuesto, "Presupuesto.xlsx"):
         st.success("✅ Presupuesto verificado.")
     else:
         st.error("⚠️ Falta Presupuesto")
