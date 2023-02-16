@@ -1,0 +1,15 @@
+programs:
+  pncb:
+    name: PNCB - Programa Nacional de Ciencias Básicas
+    path: /src/data/programs/pncb/
+  piuh:
+    name: PIUH - Proyectos Institucionales UH
+    path: /src/data/programs/piuh/
+  csh:
+    name: CSH - Ciencias Sociales y Humanidades
+    path: /src/data/programs/csh/
+roles:
+  - "Dirección de Proyecto"
+  - "Experto"
+  - "Dirección de Programa"
+  - "Apoyo de Programa"

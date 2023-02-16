@@ -45,7 +45,7 @@ def send_from_template(template, to_email, **data):
         subject = text.partition('\n')[0]
         send_email(sender_email, to_email, subject, text, server)
 
-def clean_tmp_after_run(func):
+def clean_temp_after_run(func):
     def wrapper(*args, **kwargs):
         val = func(*args, **kwargs)
         for temp_file in Path().glob('_temp.*'):
@@ -53,7 +53,13 @@ def clean_tmp_after_run(func):
         return val
     return wrapper
 
-@clean_tmp_after_run
+def create_temp(fd, ext):
+    temp = open('_tmp.'+ ext, 'wb')
+    fd = fd.read()
+    temp.write(fd)
+    return temp
+
+@clean_temp_after_run
 def check_file(file, document: str) -> bool:
     if not file:
         return False
@@ -69,9 +75,3 @@ def check_file(file, document: str) -> bool:
         if wb.properties.keywords == secure_key:
             return True
     return False
-
-def create_temp(fd, ext):
-    temp = open('_tmp.'+ ext, 'wb')
-    fd = fd.read()
-    temp.write(fd)
-    return temp

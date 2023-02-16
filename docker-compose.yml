@@ -10,6 +10,7 @@ services:
       - SECRET=${SECRET}
       - ADMIN=${ADMIN}
       - HOSTNAME=${HOSTNAME}
+      - IGNORE_AUTH=${IGNORE_AUTH}
     user: ${USER}
     ports:
       - "8501:8501"

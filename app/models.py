@@ -19,6 +19,7 @@ class Application(BaseModel):
     project_type: str
     program: str
     owner: str
+    path: str
 
     # estado
     doc_review: Status = Status.pending
@@ -40,19 +41,19 @@ class Application(BaseModel):
     def create(self, anexo3, avalCC, presupuesto):
         uuid = self.save()
 
-        with open(f"/src/data/applications/Anexo3-{uuid}.docx", "wb") as fp:
+        with open(f"{self.path}/applications/Anexo3-{uuid}.docx", "wb") as fp:
             fp.write(anexo3.getbuffer())
 
-        with open(f"/src/data/applications/AvalCC-{uuid}.docx", "wb") as fp:
+        with open(f"{self.path}/applications/AvalCC-{uuid}.pdf", "wb") as fp:
             fp.write(avalCC.getbuffer())
 
-        with open(f"/src/data/applications/Presupuesto-{uuid}.xlsx", "wb") as fp:
+        with open(f"{self.path}/applications/Presupuesto-{uuid}.xlsx", "wb") as fp:
             fp.write(presupuesto.getbuffer())
 
     def save(self):
         uuid = str(self.uuid)
 
-        with open(f"/src/data/applications/Application-{uuid}.yml", "wt") as fp:
+        with open(f"{self.path}/applications/Application-{uuid}.yml", "wt") as fp:
             safe_dump(jsonable_encoder(self.dict()), fp)
 
         return uuid
@@ -60,13 +61,13 @@ class Application(BaseModel):
     def file(self, file_name):
         prefix, extension = file_name.split(".")
         uuid = str(self.uuid)
-        file_name = f"/src/data/applications/{prefix}-{uuid}.{extension}"
+        file_name = f"{self.path}/applications/{prefix}-{uuid}.{extension}"
 
         return open(file_name, "rb")
 
     @classmethod
     def load_from(cls, program, user=None):
-        for file in Path("/src/data/applications").glob("*.yml"):
+        for file in Path(f"/src/data/programs/{program.lower()}/applications").glob("*.yml"):
             app = Application(**safe_load(file.open()))
 
             if app.program != program:

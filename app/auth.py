@@ -8,20 +8,22 @@ import os
 
 info = yaml.safe_load(open("/src/data/info.yml"))['auth']
 roles = yaml.safe_load(open("/src/data/roles.yml"))
+config = yaml.safe_load(open("/src/data/config.yml"))
 cookie = "PNCTI-AuthToken"
 
 
-def login(user, role, program):
+def login(user, role, program):      
     st.session_state.user = user
     st.session_state.role = role
     st.session_state.program = program
+    st.session_state.path = config["programs"][program.lower()]["path"]
     st.experimental_set_query_params()
     st.sidebar.info(f"Bienvenido **{user}**\n\nRol: **{role}**\n\nPrograma: **{program}**")
     set_token_in_cookies(generate_signin_token(user, role, program))
     st.sidebar.button("🚪 Cerrar sesión", on_click=logout)
 
     if user == os.getenv("ADMIN"):
-        new_role = st.sidebar.selectbox("Cambiar rol", ["Dirección de Proyecto", "Experto", "Dirección de Programa", "Apoyo de Programa"])
+        new_role = st.sidebar.selectbox("Cambiar rol", config["roles"])
         st.sidebar.button("🪄 Cambiar rol", on_click=login, args=(user, new_role, program))
 
     return user
@@ -33,6 +35,12 @@ def logout():
 
 
 def authenticate():
+    if os.getenv('IGNORE_AUTH'):
+        user = 'develop'
+        role = config['roles'][0]
+        program = list(config['programs'].items())[0][0]
+        return login(user, role, program)
+    
     token = st.experimental_get_query_params().get('token')
 
     if token:
@@ -46,6 +54,7 @@ def authenticate():
         user = st.session_state.user
         role = st.session_state.role
         program = st.session_state.program
+        path = st.session_state.path
         return login(user, role, program)
     else:
         token = get_token_from_cookies()
@@ -59,8 +68,8 @@ def authenticate():
     left, right = st.columns(2)
 
     with left:
-        role = st.selectbox("Seleccione el rol que desea acceder", ["Dirección de Proyecto", "Experto", "Dirección de Programa", "Apoyo de Programa"])
-        program = st.selectbox("Seleccione el Programa", ["PNCB - Ciencias Básicas", "CSH - Ciencias Sociales y Humanidades"]) #, "TIS - Telecomunicaciones e Informatización de la Sociedad"])
+        role = st.selectbox("Seleccione el rol que desea acceder", config["roles"])  #["Dirección de Proyecto", "Experto", "Dirección de Programa", "Apoyo de Programa"])
+        program = st.selectbox("Seleccione el Programa", [prog[1]["name"] for prog in config["programs"].items()])
         program = program.split('-')[0].strip()
         email = st.text_input("Introduza su dirección correo electrónico")
     with right:
