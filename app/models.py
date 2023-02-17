@@ -38,17 +38,11 @@ class Application(BaseModel):
     expert_1: str = None
     expert_2: str = None
 
-    def create(self, anexo3, avalCC, presupuesto):
+    def create(self, docs):
         uuid = self.save()
-
-        with open(f"{self.path}/applications/Anexo3-{uuid}.docx", "wb") as fp:
-            fp.write(anexo3.getbuffer())
-
-        with open(f"{self.path}/applications/AvalCC-{uuid}.pdf", "wb") as fp:
-            fp.write(avalCC.getbuffer())
-
-        with open(f"{self.path}/applications/Presupuesto-{uuid}.xlsx", "wb") as fp:
-            fp.write(presupuesto.getbuffer())
+        for doc in docs:
+            with open(f"{self.path}/applications/{doc['key'].capitalize()}-{uuid}.{doc['extension']}", "wb") as fp:
+                fp.write(doc['file'].getbuffer())
 
     def save(self):
         uuid = str(self.uuid)
