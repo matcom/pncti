@@ -1,5 +1,5 @@
 programs:
-  pncb:
+  PNCB:
     name: PNCB - Programa Nacional de Ciencias Básicas
     path: /src/data/programs/pncb/
     docs:
@@ -12,7 +12,7 @@ programs:
       presupuesto:
         download: True
         upload: True
-  piuh:
+  PIUH:
     name: PIUH - Proyectos Institucionales UH
     path: /src/data/programs/piuh/
     docs:
@@ -31,7 +31,7 @@ programs:
       carta:
         download: False
         upload: True
-  csh:
+  CSH:
     name: CSH - Ciencias Sociales y Humanidades
     path: /src/data/programs/csh/
     docs:
