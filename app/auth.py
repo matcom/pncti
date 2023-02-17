@@ -23,8 +23,11 @@ def login(user, role, program):
     st.sidebar.button("🚪 Cerrar sesión", on_click=logout)
 
     if user == os.getenv("ADMIN"):
+        new_program = st.sidebar.selectbox("Cambiar programa", 
+                                           [prog[1]["name"] for prog in config["programs"].items()])
+        new_program = program.split('-')[0].strip()
         new_role = st.sidebar.selectbox("Cambiar rol", config["roles"])
-        st.sidebar.button("🪄 Cambiar rol", on_click=login, args=(user, new_role, program))
+        st.sidebar.button("🪄 Cambiar", on_click=login, args=(user, new_role, new_program))
 
     return user
 
@@ -37,8 +40,8 @@ def logout():
 def authenticate():
     if os.getenv('IGNORE_AUTH'):
         user = 'develop'
-        role = config['roles'][0]
-        program = list(config['programs'].items())[0][0]
+        role = config['roles'][2]
+        program = list(config['programs'].items())[1][0]
         return login(user, role, program)
     
     token = st.experimental_get_query_params().get('token')

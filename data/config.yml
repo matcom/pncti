@@ -2,12 +2,69 @@ programs:
   pncb:
     name: PNCB - Programa Nacional de Ciencias Básicas
     path: /src/data/programs/pncb/
+    docs:
+      anexo3:
+        download: True
+        upload: True
+      avalCC:
+        download: False
+        upload: True
+      presupuesto:
+        download: True
+        upload: True
   piuh:
     name: PIUH - Proyectos Institucionales UH
     path: /src/data/programs/piuh/
+    docs:
+      anexo3: 
+        download: True
+        upload: True
+      presupuesto:
+        download: True
+        upload: True
+      cv:
+        download: False
+        upload: True
+      avalCC: 
+        download: False
+        upload: True
+      carta:
+        download: False
+        upload: True
   csh:
     name: CSH - Ciencias Sociales y Humanidades
     path: /src/data/programs/csh/
+    docs:
+      anexo3:
+        download: True
+        upload: True
+      avalCC:
+        download: False
+        upload: True
+      presupuesto:
+        download: True
+        upload: True
+docs:
+  anexo3:
+    name: Anexo 3
+    extension: docx
+    file_name: Anexo3.docx
+  avalCC:
+    name: Aval del Consejo Científico
+    extension: pdf
+    file_name: Avalcc.pdf
+  presupuesto:
+    name: Presupuesto
+    extension: xlsx
+    file_name: Presupuesto.xlsx
+  cv:
+    name: CV del Jefe del Proyecto
+    extension: pdf
+    file_name: Cv.pdf
+  carta:
+    name: Carta del Decano o Director
+    extension: pdf
+    file_name: Carta.pdf
 roles:
   - "Dirección de Proyecto"
   - "Experto"

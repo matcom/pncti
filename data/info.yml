@@ -14,13 +14,13 @@ convocatoria:
   new_msg:
     ℹ️ Para realizar una nueva aplicación, usted debe subir los documentos relacionados a continuación.
     Puede descargar el modelo correspondiente a cada documento en esta misma página.
-  anexo_3:
+  anexo3:
     "El Anexo 3 contiene la Ficha Técnica del Proyecto, incluyendo todos los detalles
     sobre el alcance, los objetivos, y los participantes del proyecto.
     \n\n
     Asegúrese de que el título y tipo de proyecto coincide con el declarado en este formulario.
     "
-  aval_cc:
+  avalCC:
     El Aval del Consejo Científico (o Consejo Técnico Asesor) de la entidad ejecutora principal
     es un documento que avala la experticia técnica de los participantes, así como la disposición
     de los mismos, a ejecutar todas las tareas planificadas durante el período que dure el Proyecto.
@@ -28,6 +28,10 @@ convocatoria:
     El Presupuesto es un documento que describe en detalle la distribución de fondos que necesita
     el Proyecto para ejecutar todas las tareas propuestas, incluyendo remuneración,
     costos directos e indirectos, e inversiones.
+  cv:
+    El CV del jefe del proyecto ...
+  carta:
+    La carta del decano o director del centro o área universitaria ...
   success:
     Toda la información requerida está lista para enviar. Haga click en **Enviar aplicación** para completar el proceso.
   missing:

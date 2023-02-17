@@ -1,6 +1,8 @@
 import streamlit as st
 from models import Application, Status
+from yaml import safe_load
 
+config = safe_load(open("/src/data/config.yml"))
 
 def show_app_state(app):
     st.write(f"### {app.title} - {app.project_type}")
@@ -9,10 +11,11 @@ def show_app_state(app):
 
     with right:
         st.write(f"#### Documentación de la aplicación")
-
-        st.download_button("📄 Descargar Anexo 3", app.file("Anexo3.docx").read(), "Anexo3.docx")
-        st.download_button("📄 Descargar Aval del CC", app.file("AvalCC.pdf").read(), "AvalCC.pdf")
-        st.download_button("📄 Descargar Presupuesto", app.file("Presupuesto.xlsx").read(), "Presupuesto.xlsx")
+        for key in config['programs'][app.program]['docs'].keys():
+            name = config['docs'][key]['name']
+            file_name = config['docs'][key]['file_name']
+            
+            st.download_button(f"📄 Descargar {name}", app.file(file_name).read(), file_name)
 
     with left:
         st.write("#### Estado de la aplicación")
