@@ -12,18 +12,18 @@ config = yaml.safe_load(open("/src/data/config.yml"))
 cookie = "PNCTI-AuthToken"
 
 
-def login(user, role, program):      
+def login(user, role, program):
     st.session_state.user = user
     st.session_state.role = role
     st.session_state.program = program
-    st.session_state.path = config["programs"][program.lower()]["path"]
+    st.session_state.path = config["programs"][program]["path"]
     st.experimental_set_query_params()
     st.sidebar.info(f"Bienvenido **{user}**\n\nRol: **{role}**\n\nPrograma: **{program}**")
     set_token_in_cookies(generate_signin_token(user, role, program))
     st.sidebar.button("🚪 Cerrar sesión", on_click=logout)
 
     if user == os.getenv("ADMIN"):
-        new_program = st.sidebar.selectbox("Cambiar programa", 
+        new_program = st.sidebar.selectbox("Cambiar programa",
                                            [prog[1]["name"] for prog in config["programs"].items()])
         new_program = program.split('-')[0].strip()
         new_role = st.sidebar.selectbox("Cambiar rol", config["roles"])
@@ -43,7 +43,7 @@ def authenticate():
         role = config['roles'][2]
         program = list(config['programs'].items())[1][0]
         return login(user, role, program)
-    
+
     token = st.experimental_get_query_params().get('token')
 
     if token:
