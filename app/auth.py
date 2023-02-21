@@ -16,7 +16,7 @@ def login(user, role, program):
     st.session_state.user = user
     st.session_state.role = role
     st.session_state.program = program
-    st.session_state.path = config["programs"][program.lower()]["path"]
+    st.session_state.path = config["programs"][program]["path"]
     st.experimental_set_query_params()
     st.sidebar.info(f"Bienvenido **{user}**\n\nRol: **{role}**\n\nPrograma: **{program}**")
     set_token_in_cookies(generate_signin_token(user, role, program))
@@ -74,7 +74,7 @@ def authenticate():
         role = st.selectbox("Seleccione el rol que desea acceder", config["roles"])
         program = st.selectbox("Seleccione el Programa", [prog[1]["name"] for prog in config["programs"].items()])
         program = program.split('-')[0].strip()
-        email = st.text_input("Introduza su dirección correo electrónico")
+        email = st.text_input("Introduza su dirección correo electrónico").strip()
     with right:
         st.info("ℹ️ " + info[role])
 
