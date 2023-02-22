@@ -74,7 +74,7 @@ def authenticate():
         role = st.selectbox("Seleccione el rol que desea acceder", config["roles"])
         program = st.selectbox("Seleccione el Programa", [prog[1]["name"] for prog in config["programs"].items()])
         program = program.split('-')[0].strip()
-        email = st.text_input("Introduza su dirección correo electrónico")
+        email = st.text_input("Introduza su dirección correo electrónico").strip()
     with right:
         st.info("ℹ️ " + info[role])
 
