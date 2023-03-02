@@ -125,7 +125,7 @@ def verify_token(token):
     serializer = URLSafeTimedSerializer(os.getenv("SECRET"))
 
     try:
-        return serializer.loads(token, max_age=3600).split("::")
+        return serializer.loads(token, max_age=7 * 24 * +3600).split("::")
     except BadData:
         return None
 
