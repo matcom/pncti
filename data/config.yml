@@ -1,7 +1,7 @@
 programs:
   PNCB:
     name: PNCB - Programa Nacional de Ciencias Básicas
-    path: /src/data/programs/pncb/
+    path: /src/data/programs/pncb
     docs:
       anexo3:
         download: True
@@ -12,9 +12,24 @@ programs:
       presupuesto:
         download: True
         upload: True
+    project_types:
+      - "Investigación Básica"
+      - "Investigación Aplicada y Desarrollo"
+      - "Innovación"
+    announcement: 
+      header: 
+        ⭐ Bienvenido a la Convocatoria 2023 para el Programa Nacional de Ciencias Básicas
+      top_msg:
+        En esta página usted puede aplicar a la convocatoria y monitorear todo el estado de su aplicación.
+      basic:
+        "Escoja un título claro y preciso, que indique el problema a resolver.
+        \n\n
+        Los tipos de proyecto disponibles son:\n
+        "
+
   PIUH:
     name: PIUH - Proyectos Institucionales UH
-    path: /src/data/programs/piuh/
+    path: /src/data/programs/piuh
     docs:
       anexo3: 
         download: True
@@ -31,9 +46,23 @@ programs:
       carta:
         download: False
         upload: True
+    project_types:
+      - "Investigación Básica"
+      - "Investigación Aplicada y Desarrollo"
+    announcement: 
+      header: 
+        ⭐ Bienvenido a la Convocatoria 2023 para Proyectos Institucionales de la UH
+      top_msg:
+        En esta página usted puede aplicar a la convocatoria y monitorear todo el estado de su aplicación.
+      basic:
+        "Escoja un título claro y preciso, que indique el problema a resolver.
+        \n\n
+        Los tipos de proyecto disponibles son:\n
+        "
+
   CSH:
     name: CSH - Ciencias Sociales y Humanidades
-    path: /src/data/programs/csh/
+    path: /src/data/programs/csh
     docs:
       anexo3:
         download: True
@@ -44,6 +73,21 @@ programs:
       presupuesto:
         download: True
         upload: True
+    project_types:
+      - "Investigación Básica"
+      - "Investigación Aplicada y Desarrollo"
+      - "Innovación"
+    announcement: 
+      header: 
+        ⭐ Bienvenido a la Convocatoria 2023 para el Programa de Ciencias Sociales y Humanísticas
+      top_msg:
+        En esta página usted puede aplicar a la convocatoria y monitorear todo el estado de su aplicación.
+      basic:
+        "Escoja un título claro y preciso, que indique el problema a resolver.
+        \n\n
+        Los tipos de proyecto disponibles son:\n
+        "
+
 docs:
   anexo3:
     name: Anexo 3
@@ -65,6 +109,7 @@ docs:
     name: Carta del Decano o Director
     extension: pdf
     file_name: Carta.pdf
+
 roles:
   - "Dirección de Proyecto"
   - "Experto"
