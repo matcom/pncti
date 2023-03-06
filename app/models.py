@@ -61,7 +61,7 @@ class Application(BaseModel):
 
     @classmethod
     def load_from(cls, program, user=None):
-        for file in Path(f"/src/data/programs/{program}/applications").glob("*.yml"):
+        for file in Path(f"/src/data/programs/{program.lower()}/applications").glob("*.yml"):
             app = Application(**safe_load(file.open()))
 
             if app.program != program:
