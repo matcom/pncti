@@ -6,15 +6,16 @@ from tools import check_file
 from models import Application
 
 st.set_page_config(page_title="PNCTI (Demo)", page_icon="⭐", layout="wide")
-info = yaml.safe_load(open("/src/data/info.yml"))['convocatoria']
+info = yaml.safe_load(open("/src/data/info.yml"))
 config = yaml.safe_load(open("/src/data/config.yml"))
 
+announcement = config['programs'][st.session_state.program]['announcement']
 st.header(
-    info['header']
+    announcement['header']
 )
 
 st.write(
-    info['top_msg']
+    announcement['top_msg']
 )
 
 user = auth.authenticate()
@@ -38,19 +39,24 @@ def send_application(title, project_type, *args):
 
 
 st.info(
-    info['new_msg']
+    info['msgs']['new_msg']
 )
 
 st.write("### Datos del Proyecto")
 
+program = config['programs'][st.session_state.program]
+
 left, right = st.columns(2)
 
 with right:
-    st.info(info["basico"])
+    msg = announcement["basic"]
+    for pt in program['project_types']:
+        msg += f"- **{pt}**: {info['project_types'][pt]}\n"
+    st.info(msg)
 
 with left:
     title = st.text_input("Título del proyecto", key="title")
-    project_type = st.selectbox("Tipo de proyecto", ["","Investigación Básica", "Investigación Aplicada y Desarrollo", "Innovación"], key="project_type")
+    project_type = st.selectbox("Tipo de proyecto", [""] + program['project_types'], key="project_type")
 
     if len(title.split()) > 5 and project_type:
         st.success("✅ Título y tipo de proyecto definido correctamente.")
@@ -63,7 +69,7 @@ ready = True
 
 args = [title, project_type]
 
-for key, value in config['programs'][st.session_state.program]['docs'].items():
+for key, value in program['docs'].items():
     name = config['docs'][key]['name']
     extension = config['docs'][key]['extension']
     file_name = config['docs'][key]['file_name']
@@ -88,13 +94,13 @@ for key, value in config['programs'][st.session_state.program]['docs'].items():
             ready = False
 
     with right:
-        st.info(f"ℹ️ **Sobre el {name}**\n\n" + info[key])
+        st.info(f"ℹ️ **Sobre el {name}**\n\n" + info['docs'][key])
         # st.info(f"ℹ️ **Sobre el {name}**\n\n{info[key]}\n\n_{title}_ - _{project_type}_")
 
 st.write("---")
 
 if ready:
-    st.success("✅ " + info['success'])
+    st.success("✅ " + info['msgs']['success'])
     st.button("⬆️ Enviar aplicación", on_click=send_application, args=args)
 else:
-    st.warning("⚠️ " + info['missing'])
+    st.warning("⚠️ " + info['msgs']['missing'])
