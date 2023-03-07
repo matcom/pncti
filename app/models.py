@@ -52,12 +52,12 @@ class Application(BaseModel):
 
         return uuid
 
-    def file(self, file_name):
+    def file(self, file_name, open_mode='rb'):
         prefix, extension = file_name.split(".")
         uuid = str(self.uuid)
         file_name = f"{self.path}/applications/{prefix}-{uuid}.{extension}"
 
-        return open(file_name, "rb")
+        return open(file_name, open_mode)
 
     @classmethod
     def load_from(cls, program, user=None):

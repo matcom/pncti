@@ -4,6 +4,14 @@ from yaml import safe_load
 
 config = safe_load(open("/src/data/config.yml"))
 
+
+def replace_file(app, file_name, buffer, key):
+    with app.file(file_name, "wb") as fp:
+        fp.write(buffer)
+
+    st.success("Archivo reemplazado con éxito")
+
+
 def show_app_state(app):
     st.write(f"### {app.title} - {app.project_type}")
 
@@ -11,11 +19,22 @@ def show_app_state(app):
 
     with right:
         st.write(f"#### Documentación de la aplicación")
-        for key in config['programs'][app.program]['docs'].keys():
-            name = config['docs'][key]['name']
-            file_name = config['docs'][key]['file_name']
-            
-            st.download_button(f"📄 Descargar {name}", app.file(file_name).read(), file_name)
+        for key in config["programs"][app.program]["docs"].keys():
+            name = config["docs"][key]["name"]
+            file_name = config["docs"][key]["file_name"]
+
+            uploaded = st.file_uploader(
+                f"Reemplazar {name}",
+                config["docs"][key]["extension"],
+                key=key,
+            )
+
+            if uploaded:
+                st.button("💾 Reemplazar", on_click=replace_file, args=(app, file_name, uploaded.getbuffer(), key))
+
+            st.download_button(
+                f"📄 Descargar {name}", app.file(file_name).read(), file_name
+            )
 
     with left:
         st.write("#### Estado de la aplicación")

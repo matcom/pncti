@@ -39,9 +39,9 @@ def logout():
 
 def authenticate():
     if os.getenv('IGNORE_AUTH'):
-        user = 'develop'
-        role = config['roles'][2]
-        program = list(config['programs'].items())[1][0]
+        user = os.getenv("ADMIN")
+        role = st.session_state.get('role', config['roles'][2])
+        program = st.session_state.get('program', list(config['programs'].items())[1][0])
         return login(user, role, program)
 
     token = st.experimental_get_query_params().get('token')
