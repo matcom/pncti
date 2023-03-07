@@ -5,7 +5,7 @@ from tools import check_file
 
 from models import Application
 
-st.set_page_config(page_title="PNCTI (Demo)", page_icon="⭐", layout="wide")
+st.set_page_config(page_title="Proyectos UH", page_icon="⭐", layout="wide")
 user = auth.authenticate()
 
 info = yaml.safe_load(open("/src/data/info.yml"))

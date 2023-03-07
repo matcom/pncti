@@ -7,7 +7,7 @@ from models import Application
 from utils import show_app_state
 
 
-st.set_page_config(page_title="PNCTI (Demo) - Programa", page_icon="⚙️", layout="wide")
+st.set_page_config(page_title="Proyectos UH - Programa", page_icon="⚙️", layout="wide")
 user = auth.authenticate()
 
 st.header("⚙️ Gestión del Programa")

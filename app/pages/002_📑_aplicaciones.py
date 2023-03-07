@@ -6,7 +6,7 @@ from models import Application, Status
 from utils import show_app_state
 
 
-st.set_page_config("PNCTI (Demo) - Aplicaciones", page_icon="📑", layout="wide")
+st.set_page_config("Proyectos UH - Aplicaciones", page_icon="📑", layout="wide")
 user = auth.authenticate()
 
 st.header('📑 Aplicaciones')
