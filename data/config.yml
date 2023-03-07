@@ -48,7 +48,9 @@ programs:
         upload: True
     project_types:
       - "Investigación Básica"
-      - "Investigación Aplicada y Desarrollo"
+      - "Investigación Aplicada"
+      - "Desarrollo"
+      - "Fortalecimiento Institucional"
     announcement: 
       header: 
         ⭐ Bienvenido a la Convocatoria 2023 para Proyectos Institucionales de la UH

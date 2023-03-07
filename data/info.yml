@@ -34,6 +34,13 @@ project_types:
     "Cuando el objetivo fundamental es producir tecnologías o herramientas para utilizar en la práctica."
   Innovación: 
     "Cuando el objetivo fundamental es generar modelos de negocio novedosos a partir de conocimiento y/o tecnologías existentes."
+  Investigación Aplicada:
+    "Cuando el objetivo fundamental es producir tecnologías o herramientas para utilizar en la práctica."
+  Desarrollo:
+    "Cuando el objetivo fundamental es producir tecnologías o herramientas que impulsen el desarrollo."
+  Fortalecimiento Institucional:
+    "Cuando el objetivo fundamental es producir tecnologías o herramientas que fortalezcan a la institución."
+  
   
 auth:
   Dirección de Proyecto:
