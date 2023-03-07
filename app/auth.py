@@ -40,7 +40,7 @@ def logout():
 def authenticate():
     if os.getenv('IGNORE_AUTH'):
         user = 'develop'
-        role = config['roles'][2]
+        role = config['roles'][0]
         program = list(config['programs'].items())[1][0]
         return login(user, role, program)
 
