@@ -7,10 +7,10 @@ from utils import show_app_state
 
 
 st.set_page_config("PNCTI (Demo) - Aplicaciones", page_icon="📑", layout="wide")
+user = auth.authenticate()
 
 st.header('📑 Aplicaciones')
 
-user = auth.authenticate()
 
 if st.session_state.role != "Dirección de Proyecto":
     st.warning("⚠️ Esta sección solo está disponible para el rol de **Dirección de Proyecto**.")

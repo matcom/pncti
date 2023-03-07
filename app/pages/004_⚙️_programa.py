@@ -8,10 +8,10 @@ from utils import show_app_state
 
 
 st.set_page_config(page_title="PNCTI (Demo) - Programa", page_icon="⚙️", layout="wide")
+user = auth.authenticate()
 
 st.header("⚙️ Gestión del Programa")
 
-user = auth.authenticate()
 
 if st.session_state.role != "Dirección de Programa":
     st.warning(

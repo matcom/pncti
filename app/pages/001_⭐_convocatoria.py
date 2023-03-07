@@ -6,6 +6,8 @@ from tools import check_file
 from models import Application
 
 st.set_page_config(page_title="PNCTI (Demo)", page_icon="⭐", layout="wide")
+user = auth.authenticate()
+
 info = yaml.safe_load(open("/src/data/info.yml"))
 config = yaml.safe_load(open("/src/data/config.yml"))
 
@@ -17,8 +19,6 @@ st.header(
 st.write(
     announcement['top_msg']
 )
-
-user = auth.authenticate()
 
 if st.session_state.role != "Dirección de Proyecto":
     st.warning("⚠️ Esta sección solo está disponible para el rol de **Dirección de Proyecto**.")
@@ -73,19 +73,19 @@ for key, value in program['docs'].items():
     name = config['docs'][key]['name']
     extension = config['docs'][key]['extension']
     file_name = config['docs'][key]['file_name']
-    
+
     st.write(f"### {name}")
     left, right = st.columns(2)
-    
+
     with left:
         if value["upload"]:
             fd = st.file_uploader(f"Subir {name}", extension, key=key)
-        
+
         if value["download"]:
             st.download_button(
                 "⏬ Descargar Modelo", open(f"{st.session_state.path}/docs/{file_name}", "rb").read(), file_name=file_name
             )
-            
+
         if fd: #check_file...
             st.success(f"✅ {name} verificado.")
             args.append({"key": key, "file": fd, "extension": extension})
