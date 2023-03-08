@@ -46,11 +46,18 @@ class Application(BaseModel):
 
     def save(self):
         uuid = str(self.uuid)
+        self.title = self.title.strip()
 
         with open(f"{self.path}/applications/Application-{uuid}.yml", "wt") as fp:
             safe_dump(jsonable_encoder(self.dict()), fp)
 
         return uuid
+
+    def destroy(self):
+        uuid = str(self.uuid)
+
+        for fname in (Path(self.path) / "applications").rglob(f"*-{uuid}.*"):
+            fname.unlink()
 
     def file(self, file_name, open_mode='rb'):
         prefix, extension = file_name.split(".")
