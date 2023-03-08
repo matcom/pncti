@@ -13,9 +13,9 @@ programs:
         download: True
         upload: True
     project_types:
-      - "Investigación Básica"
-      - "Investigación Aplicada y Desarrollo"
-      - "Innovación"
+      Investigación Básica: anexo4
+      Investigación Aplicada y Desarrollo: anexo5
+      Innovación: anexo6
     announcement: 
       header: 
         ⭐ Bienvenido a la Convocatoria 2023 para el Programa Nacional de Ciencias Básicas
@@ -47,8 +47,10 @@ programs:
         download: False
         upload: True
     project_types:
-      - "Investigación Básica"
-      - "Investigación Aplicada y Desarrollo"
+      Investigación Básica: anexo4
+      Investigación Aplicada: anexo5
+      Desarrollo: anexo5
+      Fortalecimiento Institucional: anexo6
     announcement: 
       header: 
         ⭐ Bienvenido a la Convocatoria 2023 para Proyectos Institucionales de la UH
@@ -74,9 +76,9 @@ programs:
         download: True
         upload: True
     project_types:
-      - "Investigación Básica"
-      - "Investigación Aplicada y Desarrollo"
-      - "Innovación"
+      Investigación Básica: anexo4
+      Investigación Aplicada y Desarrollo: anexo5
+      Innovación: anexo6
     announcement: 
       header: 
         ⭐ Bienvenido a la Convocatoria 2023 para el Programa de Ciencias Sociales y Humanísticas
@@ -109,6 +111,18 @@ docs:
     name: Carta del Decano o Director
     extension: pdf
     file_name: Carta.pdf
+  anexo4:
+    name: Anexo 4
+    extension: xlsx
+    file_name: Anexo4.xlsx
+  anexo5:
+    name: Anexo 5
+    extension: xlsx
+    file_name: Anexo5.xlsx
+  anexo6:
+   name: Anexo 6
+   extension: xlsx
+   file_name: Anexo6.xlsx
 
 roles:
   - "Dirección de Proyecto"

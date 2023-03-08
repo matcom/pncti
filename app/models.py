@@ -67,12 +67,26 @@ class Application(BaseModel):
         return open(file_name, open_mode)
 
     @classmethod
-    def load_from(cls, program, user=None):
+    def expert_doc_save(cls, program, username, key, extension):
+        with open(f"/src/data/programs/{program.lower()}/applications/{key.capitalize()}-{username}-{uuid}.{extension}", "wb") as fp:
+            fp.write(doc['file'].getbuffer())
+            
+    @classmethod
+    def expert_doc_load(cls, program, username, key, extension):
+        pass
+
+    @classmethod
+    def load_from(cls, program, user=None, expert=False):
         for file in Path(f"/src/data/programs/{program.lower()}/applications").glob("*.yml"):
             app = Application(**safe_load(file.open()))
 
             if app.program != program:
                 continue
+            
+            if expert:
+                if app.expert_1 == user or app.expert_2 == user:
+                    yield app
 
-            if user is None or app.owner == user :
+            elif user is None or app.owner == user :
                 yield app
+ 

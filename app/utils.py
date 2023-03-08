@@ -18,8 +18,7 @@ def update_app(app, title, type):
     app.save()
     st.success(f"Aplicación **{app.title}** modificada con éxito.")
 
-
-def show_app_state(app):
+def show_app_state(app, expert=False):
     st.write(f"### {app.title} - {app.project_type}")
 
     left, right = st.columns(2)
@@ -30,14 +29,15 @@ def show_app_state(app):
             name = config["docs"][key]["name"]
             file_name = config["docs"][key]["file_name"]
 
-            uploaded = st.file_uploader(
-                f"Reemplazar {name}",
-                config["docs"][key]["extension"],
-                key=key,
-            )
+            if not expert:
+                uploaded = st.file_uploader(
+                    f"Reemplazar {name}",
+                    config["docs"][key]["extension"],
+                    key=key,
+                )
 
-            if uploaded:
-                st.button("💾 Reemplazar", on_click=replace_file, args=(app, file_name, uploaded.getbuffer(), key))
+                if uploaded:
+                    st.button("💾 Reemplazar", on_click=replace_file, args=(app, file_name, uploaded.getbuffer(), key))
 
             st.download_button(
                 f"📄 Descargar {name}", app.file(file_name).read(), file_name
@@ -49,7 +49,7 @@ def show_app_state(app):
         program = config['programs'][st.session_state.program]
 
         new_title = st.text_input("Nuevo título", value=app.title)
-        new_type = st.selectbox("Tipo de proyecto", program['project_types'], index=program['project_types'].index(app.project_type))
+        new_type = st.selectbox("Tipo de proyecto", program['project_types'], index=list(program['project_types']).index(app.project_type))
 
         st.button("💾 Modificar", on_click=update_app, args=(app, new_title, new_type))
 

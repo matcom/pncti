@@ -50,13 +50,13 @@ left, right = st.columns(2)
 
 with right:
     msg = announcement["basic"]
-    for pt in program['project_types']:
+    for pt in program['project_types'].keys():
         msg += f"- **{pt}**: {info['project_types'][pt]}\n"
     st.info(msg)
 
 with left:
     title = st.text_input("Título del proyecto", key="title")
-    project_type = st.selectbox("Tipo de proyecto", [""] + program['project_types'], key="project_type")
+    project_type = st.selectbox("Tipo de proyecto", [""] + program['project_types'].keys(), key="project_type")
 
     if title and project_type:
         st.success("✅ Título y tipo de proyecto definido correctamente.")
