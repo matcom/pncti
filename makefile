@@ -38,7 +38,10 @@ update:
 
 .PHONY: sync
 sync:
-	git add data/*.yaml
-	git commit -m "Update data" || echo "Nothing to commit"
-	git pull --no-edit && make app
-	git push
+	git pull | grep -v 'up to date' && make stage
+
+.PHONY: cron
+cron:
+	echo "*/10 * * * * cd pncti && make sync" | crontab
+	crontab -l
+	# now run "cron start" to complete step (you may need sudo)
