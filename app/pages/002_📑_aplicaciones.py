@@ -30,6 +30,7 @@ show_app_state(app)
 def delete_application():
     app.destroy()
     st.session_state['delete-app'] = False
+    st.warning(f"⚠️ Aplicación **{app.title}** eliminada satisfactoriamente.")
 
 
 with st.expander("🔴 BORRAR APLICACIÓN"):

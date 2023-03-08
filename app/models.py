@@ -46,6 +46,7 @@ class Application(BaseModel):
 
     def save(self):
         uuid = str(self.uuid)
+        self.title = self.title.strip()
 
         with open(f"{self.path}/applications/Application-{uuid}.yml", "wt") as fp:
             safe_dump(jsonable_encoder(self.dict()), fp)

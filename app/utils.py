@@ -12,6 +12,13 @@ def replace_file(app, file_name, buffer, key):
     st.success("Archivo reemplazado con éxito")
 
 
+def update_app(app, title, type):
+    app.title = title
+    app.project_type = type
+    app.save()
+    st.success(f"Aplicación **{app.title}** modificada con éxito.")
+
+
 def show_app_state(app):
     st.write(f"### {app.title} - {app.project_type}")
 
@@ -37,6 +44,15 @@ def show_app_state(app):
             )
 
     with left:
+        st.write("#### Modificar metadatos")
+
+        program = config['programs'][st.session_state.program]
+
+        new_title = st.text_input("Nuevo título", value=app.title)
+        new_type = st.selectbox("Tipo de proyecto", program['project_types'], index=program['project_types'].index(app.project_type))
+
+        st.button("💾 Modificar", on_click=update_app, args=(app, new_title, new_type))
+
         st.write("#### Estado de la aplicación")
 
         def report_status(title, value):
