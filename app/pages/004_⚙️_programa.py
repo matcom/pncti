@@ -21,15 +21,22 @@ if st.session_state.role != "Dirección de Programa":
 
 applications = list(Application.load_from(program=st.session_state.program))
 df = []
+experts = yaml.safe_load(open("/src/data/roles.yml"))[st.session_state.program]['Experto']
 
+if not applications:
+    st.warning(
+        "⚠️ No hay aplicaciones registradas en el programa."
+    )
+    st.stop()
+    
 for app in applications:
     df.append(
         dict(
             Título=app.title,
             Tipo=app.project_type,
             Jefe=app.owner,
-            Experto1=app.expert_1 or "",
-            Experto2=app.expert_2 or "",
+            Experto1=experts[app.expert_1] if app.expert_1 else "",
+            Experto2=experts[app.expert_2] if app.expert_2 else "",
         )
     )
 
@@ -48,8 +55,14 @@ if app is None:
 left, right = show_app_state(app)
 
 def assign_expert(app):
-    "Assignar experto"
+    "Asignar experto"
 
+    value = st.multiselect(label="Expertos", options=[f"{exp[1]} ({exp[0]})" for exp in experts.items()], max_selections=2)
+    
+    if st.button("Asignar expertos"):
+        for i, expert in enumerate(value):
+            exec(f'app.expert_{i+1} = str(expert).split("(")[1][:-1]')
+        app.save()
 
 def review_docs(app):
     "Revisión inicial de documentos"
