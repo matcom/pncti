@@ -58,10 +58,10 @@ with left:
     title = st.text_input("Título del proyecto", key="title")
     project_type = st.selectbox("Tipo de proyecto", [""] + program['project_types'].keys(), key="project_type")
 
-    if len(title.split()) > 5 and project_type:
+    if title and project_type:
         st.success("✅ Título y tipo de proyecto definido correctamente.")
     else:
-        st.warning("⚠️ Debe definir un título (no menor de 5 palabras) y el tipo del proyecto antes de continuar con la aplicación")
+        st.warning("⚠️ Debe definir un título y el tipo del proyecto antes de continuar con la aplicación")
         st.stop()
 
 

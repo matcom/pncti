@@ -1,7 +1,12 @@
 import streamlit as st
 import auth
+import os
+
 
 st.set_page_config("Proyectos UH", page_icon="🏠", layout="wide")
+
+git_version = os.popen("git --git-dir=/src/.git log -n 1 --pretty='%cd - %h'").readline().strip()
+st.info(f"ℹ️ Versión desplegada: **{git_version}**")
 
 user = auth.authenticate()
 
