@@ -27,9 +27,13 @@ if not app:
 
 show_app_state(app)
 
-with st.expander("🔴 BORRAR APLICACIÓN"):
-    st.warning("⚠️ ¡¡¡ La acción siguiente es permanente, todos sus datos se perderán !!!")
+def delete_application():
+    app.destroy()
+    st.session_state['delete-app'] = False
 
-    if st.checkbox("Soy conciente de que perderé todos los datos de esta aplicación.") and st.button("🔴 Eliminar Aplicación"):
-        app.destroy()
-        st.experimental_rerun()
+
+with st.expander("🔴 BORRAR APLICACIÓN"):
+    st.warning(f"⚠️ La acción siguiente es permanente, todos los datos de la aplicación **{app.title}** se perderán.")
+
+    if st.checkbox(f"Soy conciente de que perderé todos los datos de la aplicación **{app.title}**.", key="delete-app"):
+        st.button("🔴 Eliminar Aplicación", on_click=delete_application)
