@@ -26,3 +26,10 @@ if not app:
     st.stop()
 
 show_app_state(app)
+
+with st.expander("🔴 BORRAR APLICACIÓN"):
+    st.warning("⚠️ ¡¡¡ La acción siguiente es permanente, todos sus datos se perderán !!!")
+
+    if st.checkbox("Soy conciente de que perderé todos los datos de esta aplicación.") and st.button("🔴 Eliminar Aplicación"):
+        app.destroy()
+        st.experimental_rerun()

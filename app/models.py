@@ -52,6 +52,12 @@ class Application(BaseModel):
 
         return uuid
 
+    def destroy(self):
+        uuid = str(self.uuid)
+
+        for fname in (Path(self.path) / "applications").rglob(f"*-{uuid}.*"):
+            fname.unlink()
+
     def file(self, file_name, open_mode='rb'):
         prefix, extension = file_name.split(".")
         uuid = str(self.uuid)
