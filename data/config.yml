@@ -16,8 +16,8 @@ programs:
       Investigación Básica: anexo4
       Investigación Aplicada y Desarrollo: anexo5
       Innovación: anexo6
-    announcement: 
-      header: 
+    announcement:
+      header:
         ⭐ Bienvenido a la Convocatoria 2023 para el Programa Nacional de Ciencias Básicas
       top_msg:
         En esta página usted puede aplicar a la convocatoria y monitorear todo el estado de su aplicación.
@@ -31,7 +31,7 @@ programs:
     name: PIUH - Proyectos Institucionales UH
     path: /src/data/programs/piuh
     docs:
-      anexo3: 
+      anexo3:
         download: True
         upload: True
       presupuesto:
@@ -40,7 +40,7 @@ programs:
       cv:
         download: False
         upload: True
-      avalCC: 
+      avalCC:
         download: False
         upload: True
       carta:
@@ -48,11 +48,10 @@ programs:
         upload: True
     project_types:
       Investigación Básica: anexo4
-      Investigación Aplicada: anexo5
-      Desarrollo: anexo5
+      Investigación Aplicada y Desarrollo: anexo5
       Fortalecimiento Institucional: anexo6
-    announcement: 
-      header: 
+    announcement:
+      header:
         ⭐ Bienvenido a la Convocatoria 2023 para Proyectos Institucionales de la UH
       top_msg:
         En esta página usted puede aplicar a la convocatoria y monitorear todo el estado de su aplicación.
@@ -79,8 +78,8 @@ programs:
       Investigación Básica: anexo4
       Investigación Aplicada y Desarrollo: anexo5
       Innovación: anexo6
-    announcement: 
-      header: 
+    announcement:
+      header:
         ⭐ Bienvenido a la Convocatoria 2023 para el Programa de Ciencias Sociales y Humanísticas
       top_msg:
         En esta página usted puede aplicar a la convocatoria y monitorear todo el estado de su aplicación.
