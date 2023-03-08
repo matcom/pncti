@@ -56,7 +56,7 @@ with right:
 
 with left:
     title = st.text_input("Título del proyecto", key="title")
-    project_type = st.selectbox("Tipo de proyecto", [""] + program['project_types'].keys(), key="project_type")
+    project_type = st.selectbox("Tipo de proyecto", [""] + list(program['project_types']), key="project_type")
 
     if title and project_type:
         st.success("✅ Título y tipo de proyecto definido correctamente.")
