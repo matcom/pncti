@@ -70,7 +70,7 @@ class Application(BaseModel):
     def expert_doc_save(cls, program, username, key, extension):
         with open(f"/src/data/programs/{program.lower()}/applications/{key.capitalize()}-{username}-{uuid}.{extension}", "wb") as fp:
             fp.write(doc['file'].getbuffer())
-            
+
     @classmethod
     def expert_doc_load(cls, program, username, key, extension):
         pass
@@ -82,11 +82,10 @@ class Application(BaseModel):
 
             if app.program != program:
                 continue
-            
+
             if expert:
                 if app.expert_1 == user or app.expert_2 == user:
                     yield app
 
             elif user is None or app.owner == user :
                 yield app
- 

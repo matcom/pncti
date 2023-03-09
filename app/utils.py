@@ -18,7 +18,6 @@ def update_app(app, title, type):
     app.save()
     st.success(f"Aplicación **{app.title}** modificada con éxito.")
 
-
 def show_app_state(app, expert=False):
     st.write(f"### {app.title} - {app.project_type}")
 
@@ -50,7 +49,7 @@ def show_app_state(app, expert=False):
         program = config['programs'][st.session_state.program]
 
         new_title = st.text_input("Nuevo título", value=app.title)
-        new_type = st.selectbox("Tipo de proyecto", program['project_types'], index=program['project_types'].index(app.project_type))
+        new_type = st.selectbox("Tipo de proyecto", program['project_types'], index=list(program['project_types']).index(app.project_type))
 
         st.button("💾 Modificar", on_click=update_app, args=(app, new_title, new_type))
 
