@@ -82,7 +82,7 @@ def assign_expert(app: Application):
 
     def assign_expert(app, value):
         for i, expert in enumerate(value):
-            setattr(app, f'expert_{i+1}', str(expert).split("(")[1][:-1])
+            setattr(app, f'expert_{i+1}', str(expert).split("(")[-1][:-1])
 
         app.save()
 
