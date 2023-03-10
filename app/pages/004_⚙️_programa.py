@@ -19,7 +19,7 @@ if st.session_state.role != "Dirección de Programa":
     )
     st.stop()
 
-applications = Application.load_from(program=st.session_state.program, user=st.session_state.user)
+applications = Application.load_from(program=st.session_state.program)
 
 df = []
 experts = yaml.safe_load(open("/src/data/roles.yml"))[st.session_state.program]['Experto']
