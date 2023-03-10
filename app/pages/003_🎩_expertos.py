@@ -42,20 +42,30 @@ left, right = show_app_state(app, expert=True)
 with right:
     st.write("#### Evaluación")
 
-    pt = config["programs"][app.program]["project_types"][app.project_type]
-    name = config["docs"][pt]["name"]
-    file_name = config["docs"][pt]["file_name"]
-
+    anexo = config["programs"][app.program]["project_types"][app.project_type]
+    name = config["docs"][anexo]["name"]
+    file_name = config["docs"][anexo]["file_name"]
+    extension = config["docs"][anexo]["extension"]
 
     uploaded = st.file_uploader(
         f"Subir {name}",
-        config["docs"][pt]["extension"],
-        key=pt
-    )
-    st.download_button(
-        f"⏬ Descargar {name}", open(f"{st.session_state.path}/docs/{file_name}", "rb").read(), file_name=file_name
+        extension,
+        key=anexo
     )
 
+    last_version = app.file(file_name, expert=st.session_state.user)
+    if last_version:
+        st.download_button(
+        f"⏬ Descargar última versión", last_version.read(), file_name=file_name
+    )
+    else:
+        st.download_button(
+        f"⏬ Descargar plantilla del {name}", open(f"{st.session_state.path}/docs/{file_name}", "rb").read(), file_name=file_name
+    )
+          
     if uploaded:
-        # Guardar archivo
-        pass
+        app.save_expert_eval(expert=st.session_state.user, 
+                             file_name=anexo,
+                             doc=uploaded,
+                             extension=extension)
+        st.success("Evaluación guardada satisfactoriamente", icon="✅")

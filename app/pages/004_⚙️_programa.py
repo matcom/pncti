@@ -12,6 +12,7 @@ user = auth.authenticate()
 
 st.header("⚙️ Gestión del Programa")
 
+config = yaml.safe_load(open("/src/data/config.yml"))
 
 if st.session_state.role != "Dirección de Programa":
     st.warning(
@@ -29,10 +30,11 @@ if not applications:
         "⚠️ No hay aplicaciones registradas en el programa."
     )
     st.stop()
-
-for app in applications.values():
+    
+for i, app in enumerate(applications.values()):
     df.append(
         dict(
+            No=i+1,
             Título=app.title,
             Tipo=app.project_type,
             Jefe=app.owner,
@@ -41,7 +43,7 @@ for app in applications.values():
         )
     )
 
-df = pd.DataFrame(df).set_index("Título")
+df = pd.DataFrame(df).set_index("No")
 
 with st.expander(f"Listado de aplicaciones ({len(df)})"):
     st.table(df)
@@ -53,6 +55,26 @@ if app is None:
 
 left, right = show_app_state(app, expert=True)
 
+with right:
+    st.write(f"#### Evaluación de los expertos")
+    
+    anexo = config["programs"][app.program]["project_types"][app.project_type]
+    name = config["docs"][anexo]["name"]
+    file_name = config["docs"][anexo]["file_name"]
+        
+    for i in range(1, 3):
+        exp = getattr(app, f"expert_{i}")
+        st.write(f"**Experto {i}:** {experts[exp] if exp in experts.keys() else 'No está asignado'}")
+        
+        exp_file = app.file(file_name=file_name, expert=exp)
+        if exp_file:
+            st.download_button(
+                f"⏬ Descargar última versión subida del {name}", exp_file, file_name=file_name
+            )
+        else:
+            st.warning("No hay evaluación de este experto", icon="⚠️")
+        
+
 def assign_expert(app: Application):
     "Asignar experto"
 
@@ -60,7 +82,7 @@ def assign_expert(app: Application):
 
     def assign_expert(app, value):
         for i, expert in enumerate(value):
-            setattr(app, f'expert_{i+1}', str(expert).split("(")[1][:-1])
+            setattr(app, f'expert_{i+1}', str(expert).split("(")[-1][:-1])
 
         app.save()
 

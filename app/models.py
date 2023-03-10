@@ -66,21 +66,18 @@ class Application(BaseModel):
         for fname in (Path(self.path) / "applications").rglob(f"*-{uuid}.*"):
             fname.unlink()
 
-    def file(self, file_name, open_mode='rb'):
+    def file(self, file_name, open_mode='rb', expert=None):
         prefix, extension = file_name.split(".")
         uuid = str(self.uuid)
-        file_name = f"{self.path}/applications/{prefix}-{uuid}.{extension}"
+        if not expert: expert = "" # Parche porque ya las aplicaciones están creadas
+        file_name = f"{self.path}/applications/{prefix + expert}-{uuid}.{extension}"
+        if Path(file_name).exists():
+            return open(file_name, open_mode)
+        return False
 
-        return open(file_name, open_mode)
-
-    @classmethod
-    def expert_doc_save(cls, program, username, key, extension):
-        with open(f"/src/data/programs/{program.lower()}/applications/{key.capitalize()}-{username}-{uuid}.{extension}", "wb") as fp:
-            fp.write(doc['file'].getbuffer())
-
-    @classmethod
-    def expert_doc_load(cls, program, username, key, extension):
-        pass
+    def save_expert_eval(self, expert, file_name, doc, extension):
+        with open(f"{self.path}/applications/{file_name.capitalize() + expert}-{self.uuid}.{extension}", "wb") as fp:
+            fp.write(doc.getbuffer())
 
     @classmethod
     def _load_from(cls, program, user=None, expert=False):
