@@ -44,16 +44,17 @@ def show_app_state(app, expert=False):
             )
 
     with left:
-        st.write("#### Modificar metadatos")
+        if not expert:
+            st.write("#### Modificar metadatos")
 
-        program = config['programs'][st.session_state.program]
+            program = config['programs'][st.session_state.program]
 
-        new_title = st.text_input("Nuevo título", value=app.title)
-        new_type = st.selectbox("Tipo de proyecto", program['project_types'], index=list(program['project_types']).index(app.project_type))
+            new_title = st.text_input("Nuevo título", value=app.title)
+            new_type = st.selectbox("Tipo de proyecto", program['project_types'], index=list(program['project_types']).index(app.project_type))
 
-        st.button("💾 Modificar", on_click=update_app, args=(app, new_title, new_type))
+            st.button("💾 Modificar", on_click=update_app, args=(app, new_title, new_type))
 
-        st.write("#### Estado de la aplicación")
+            st.write("#### Estado de la aplicación")
 
         def report_status(title, value):
             if value == Status.pending:

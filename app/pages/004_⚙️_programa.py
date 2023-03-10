@@ -29,10 +29,11 @@ if not applications:
         "⚠️ No hay aplicaciones registradas en el programa."
     )
     st.stop()
-
-for app in applications.values():
+    
+for i, app in enumerate(applications):
     df.append(
         dict(
+            No=i+1,
             Título=app.title,
             Tipo=app.project_type,
             Jefe=app.owner,
@@ -41,7 +42,7 @@ for app in applications.values():
         )
     )
 
-df = pd.DataFrame(df).set_index("Título")
+df = pd.DataFrame(df).set_index("No")
 
 with st.expander(f"Listado de aplicaciones ({len(df)})"):
     st.table(df)
