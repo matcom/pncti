@@ -1,3 +1,4 @@
+import datetime
 import streamlit as st
 import yaml
 import auth
@@ -15,6 +16,12 @@ announcement = config['programs'][st.session_state.program]['announcement']
 st.header(
     announcement['header']
 )
+
+deadline = config['programs'][st.session_state.program]['deadline']
+
+if deadline < datetime.datetime.now():
+    st.warning(f"##### ⚠️ La convocatoria para el programa {st.session_state.program} ya ha cerrado.")
+    st.stop()
 
 st.write(
     announcement['top_msg']

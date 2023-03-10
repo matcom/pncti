@@ -1,3 +1,4 @@
+import collections
 from uuid import UUID, uuid4
 from pathlib import Path
 import enum
@@ -38,6 +39,12 @@ class Application(BaseModel):
     expert_1: str = None
     expert_2: str = None
 
+    def __eq__(self, __o: object) -> bool:
+        return isinstance(__o, Application) and self.uuid == __o.uuid
+
+    def __hash__(self) -> int:
+        return hash(self.uuid)
+
     def create(self, docs):
         uuid = self.save()
         for doc in docs:
@@ -76,7 +83,7 @@ class Application(BaseModel):
         pass
 
     @classmethod
-    def load_from(cls, program, user=None, expert=False):
+    def _load_from(cls, program, user=None, expert=False):
         for file in Path(f"/src/data/programs/{program.lower()}/applications").glob("*.yml"):
             app = Application(**safe_load(file.open()))
 
@@ -89,3 +96,12 @@ class Application(BaseModel):
 
             elif user is None or app.owner == user :
                 yield app
+
+    @classmethod
+    def load_from(cls, program, user=None, expert=False):
+        result = collections.defaultdict(lambda: None)
+
+        for app in Application._load_from(program, user, expert):
+            result[app.title] = app
+
+        return result
