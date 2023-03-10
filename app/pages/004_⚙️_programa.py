@@ -12,6 +12,7 @@ user = auth.authenticate()
 
 st.header("⚙️ Gestión del Programa")
 
+config = yaml.safe_load(open("/src/data/config.yml"))
 
 if st.session_state.role != "Dirección de Programa":
     st.warning(
@@ -30,7 +31,7 @@ if not applications:
     )
     st.stop()
     
-for i, app in enumerate(applications):
+for i, app in enumerate(applications.values()):
     df.append(
         dict(
             No=i+1,
@@ -53,6 +54,26 @@ if app is None:
     st.stop()
 
 left, right = show_app_state(app, expert=True)
+
+with right:
+    st.write(f"#### Evaluación de los expertos")
+    
+    anexo = config["programs"][app.program]["project_types"][app.project_type]
+    name = config["docs"][anexo]["name"]
+    file_name = config["docs"][anexo]["file_name"]
+        
+    for i in range(1, 3):
+        exp = getattr(app, f"expert_{i}")
+        st.write(f"**Experto {i}:** {experts[exp] if exp in experts.keys() else 'No está asignado'}")
+        
+        exp_file = app.file(file_name=file_name, expert=exp)
+        if exp_file:
+            st.download_button(
+                f"⏬ Descargar última versión subida del {name}", exp_file, file_name=file_name
+            )
+        else:
+            st.warning("Este experto no ha subido su evaluación", icon="⚠️")
+        
 
 def assign_expert(app: Application):
     "Asignar experto"
