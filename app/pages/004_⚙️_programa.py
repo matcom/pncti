@@ -72,7 +72,7 @@ with right:
                 f"⏬ Descargar última versión subida del {name}", exp_file, file_name=file_name
             )
         else:
-            st.warning("Este experto no ha subido su evaluación", icon="⚠️")
+            st.warning("No hay evaluación de este experto", icon="⚠️")
         
 
 def assign_expert(app: Application):

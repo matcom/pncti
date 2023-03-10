@@ -36,8 +36,8 @@ class Application(BaseModel):
     social_score: int = 0
 
     # expertos
-    expert_1: str = ""
-    expert_2: str = ""
+    expert_1: str = None
+    expert_2: str = None
 
     def __eq__(self, __o: object) -> bool:
         return isinstance(__o, Application) and self.uuid == __o.uuid
@@ -66,9 +66,10 @@ class Application(BaseModel):
         for fname in (Path(self.path) / "applications").rglob(f"*-{uuid}.*"):
             fname.unlink()
 
-    def file(self, file_name, open_mode='rb', expert=""):
+    def file(self, file_name, open_mode='rb', expert=None):
         prefix, extension = file_name.split(".")
         uuid = str(self.uuid)
+        if not expert: expert = "" # Parche porque ya las aplicaciones están creadas
         file_name = f"{self.path}/applications/{prefix + expert}-{uuid}.{extension}"
         if Path(file_name).exists():
             return open(file_name, open_mode)
