@@ -1,0 +1,8 @@
+Mensaje de la Dirección del programa $program
+
+$message
+
+
+-----
+Este correo fue escrito por $user
+-----
