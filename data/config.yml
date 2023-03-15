@@ -2,7 +2,7 @@ programs:
   PNCB:
     name: PNCB - Programa Nacional de Ciencias Básicas
     path: /src/data/programs/pncb
-    deadline: 2023-03-15 20:00:00
+    deadline: 2023-03-16 05:00:00
     docs:
       anexo3:
         download: True
@@ -66,7 +66,7 @@ programs:
   CSH:
     name: CSH - Ciencias Sociales y Humanidades
     path: /src/data/programs/csh
-    deadline: 2023-03-15 20:00:00
+    deadline: 2023-03-16 5:00:00
     docs:
       anexo3:
         download: True
