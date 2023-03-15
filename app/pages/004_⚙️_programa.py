@@ -76,6 +76,9 @@ def unassign_expert(app: Application, i: int):
     "Quitar asignación"
     
     setattr(app, f"expert_{i}", None)
+    setattr(app, f"expert_{i}_score", 0)
+    setattr(app, f"expert_{i}_review", Status.pending)
+    
     app.save()
 
 with right:
