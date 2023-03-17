@@ -2,7 +2,7 @@ programs:
   PNCB:
     name: PNCB - Programa Nacional de Ciencias Básicas
     path: /src/data/programs/pncb
-    deadline: 2023-03-16 05:00:00
+    deadline: 2023-03-17 21:00:00
     docs:
       anexo3:
         download: True
@@ -27,6 +27,19 @@ programs:
         \n\n
         Los tipos de proyecto disponibles son:\n
         "
+    experts:
+      regular: 
+        number: 3
+        form: stadard
+        coeficent: 1
+      budget:
+        number: 1
+        form: standard
+        coeficent: 1
+      social:
+        number: 1
+        form: standard
+        coeficent: 1
 
   PIUH:
     name: PIUH - Proyectos Institucionales UH
@@ -62,6 +75,19 @@ programs:
         \n\n
         Los tipos de proyecto disponibles son:\n
         "
+    experts:
+      regular: 
+        number: 3
+        form: stadard
+        coeficent: 1
+      budget:
+        number: 1
+        form: standard
+        coeficent: 1
+      social:
+        number: 1
+        form: standard
+        coeficent: 1
 
   CSH:
     name: CSH - Ciencias Sociales y Humanidades
@@ -91,6 +117,19 @@ programs:
         \n\n
         Los tipos de proyecto disponibles son:\n
         "
+    experts:
+      regular: 
+        number: 3
+        form: stadard
+        coeficent: 1
+      budget:
+        number: 1
+        form: standard
+        coeficent: 1
+      social:
+        number: 1
+        form: standard
+        coeficent: 1
 
 docs:
   anexo3:

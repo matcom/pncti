@@ -40,8 +40,8 @@ def logout():
 def authenticate():
     if os.getenv('IGNORE_AUTH'):
         user = os.getenv("ADMIN")
-        role = st.session_state.get('role', config['roles'][1])
-        program = st.session_state.get('program', list(config['programs'].items())[1][0])
+        role = st.session_state.get('role', config['roles'][2])
+        program = st.session_state.get('program', list(config['programs'].items())[0][0])
         return login(user, role, program)
 
     token = st.experimental_get_query_params().get('token')
