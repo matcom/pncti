@@ -38,6 +38,8 @@ class Application(BaseModel):
     # expertos
     expert_1: str = None
     expert_2: str = None
+    
+    experts: dict = {}
 
     def __eq__(self, __o: object) -> bool:
         return isinstance(__o, Application) and self.uuid == __o.uuid
@@ -102,3 +104,14 @@ class Application(BaseModel):
             result[app.title] = app
 
         return result
+
+class Evaluation(BaseModel):
+    final_score: float = 0
+    coeficent: float = 1
+
+class Expert(BaseModel):
+    username: str
+    role: str
+    emails: list = []
+    evaluation: Evaluation()
+    count: int = 0
