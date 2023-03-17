@@ -8,8 +8,7 @@ config = safe_load(open("/src/data/config.yml"))
 def replace_file(app, file_name, buffer):
     with app.file(file_name, "wb") as fp:
         fp.write(buffer)
-
-    st.success("Archivo reemplazado con éxito")
+        st.success("Archivo modificado con éxito")
 
 
 def update_app(app, title, type):
@@ -20,7 +19,8 @@ def update_app(app, title, type):
 
 def show_app_state(app, expert=False):
     st.write(f"### {app.title} - {app.project_type}")
-
+    if app.moved:
+        st.info(f"Esta aplicación viene del programa {app.moved}", icon="ℹ️")
     left, right = st.columns(2)
 
     with right:
@@ -28,20 +28,25 @@ def show_app_state(app, expert=False):
         for key in config["programs"][app.program]["docs"].keys():
             name = config["docs"][key]["name"]
             file_name = config["docs"][key]["file_name"]
-
+            
+            exist =  app.file(file_name)
             if not expert:
                 uploaded = st.file_uploader(
-                    f"Reemplazar {name}",
+                    f"Reemplazar {name}" if exist else f"Subir {name}",
                     config["docs"][key]["extension"],
                     key=key,
                 )
 
                 if uploaded:
                     st.button("💾 Reemplazar", on_click=replace_file, args=(app, file_name, uploaded.getbuffer()), key=f"{key}_replace")
-
-            st.download_button(
-                f"📄 Descargar {name}", app.file(file_name).read(), file_name
-            )
+            
+            if exist:
+                st.download_button(
+                    f"📄 Descargar {name}", app.file(file_name).read(), file_name
+                )
+            else:
+                st.warning(f"No se ha subido el {name}", icon="⚠️")
+           
 
     with left:
         if not expert:

@@ -73,8 +73,20 @@ def review_docs(app: Application):
 
     st.button("Aplicar dictamen", on_click=review_doc, args=(app, value))
 
+def move_app(app: Application):
+    "Mover aplicación a otro programa"
+    
+    value = st.selectbox("Programa", [prog for prog in config["programs"] if prog != app.program])
+    
+    def move_app(app, value):
+        new_path = config["programs"][value]["path"]
+        app.move(old_program=app.program, new_program=value, new_path=new_path)
+        app.save()
+    
+    st.info(f"Usted va a mover la aplicación {app.title} al programa {value}", icon="ℹ️")
+    st.button("Mover", on_click=move_app, args=[app, value])    
 
-actions = { func.__doc__: func for func in [review_docs]}
+actions = { func.__doc__: func for func in [review_docs, move_app]}
 
 def delete_application():
     app.destroy()
@@ -83,6 +95,7 @@ def delete_application():
 
 with sections[0]:
     left, right = show_app_state(app, expert=True)
+    
     with left:
         st.write("#### Acciones")
         action = st.selectbox("Seleccione una opción", actions)
