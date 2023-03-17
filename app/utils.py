@@ -5,7 +5,7 @@ from yaml import safe_load
 config = safe_load(open("/src/data/config.yml"))
 
 
-def replace_file(app, file_name, buffer, key):
+def replace_file(app, file_name, buffer):
     with app.file(file_name, "wb") as fp:
         fp.write(buffer)
 
@@ -37,7 +37,7 @@ def show_app_state(app, expert=False):
                 )
 
                 if uploaded:
-                    st.button("💾 Reemplazar", on_click=replace_file, args=(app, file_name, uploaded.getbuffer(), key))
+                    st.button("💾 Reemplazar", on_click=replace_file, args=(app, file_name, uploaded.getbuffer()), key=f"{key}_replace")
 
             st.download_button(
                 f"📄 Descargar {name}", app.file(file_name).read(), file_name
