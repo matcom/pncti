@@ -132,7 +132,7 @@ def unassign_expert(app: Application, i: int):
 with sections[1]:
     st.write(f"#### Evaluación de los expertos")
     
-    anexo = config["programs"][app.program]["project_types"][app.project_type]
+    anexo = config["programs"][app.program]["project_types"][app.project_type]["doc"]
     name = config["docs"][anexo]["name"]
     file_name = config["docs"][anexo]["file_name"]
     

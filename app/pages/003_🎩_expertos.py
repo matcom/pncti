@@ -42,7 +42,7 @@ left, right = show_app_state(app, expert=True)
 with right:
     st.write("#### Evaluación")
 
-    anexo = config["programs"][app.program]["project_types"][app.project_type]
+    anexo = config["programs"][app.program]["project_types"][app.project_type]["doc"]
     name = config["docs"][anexo]["name"]
     file_name = config["docs"][anexo]["file_name"]
     extension = config["docs"][anexo]["extension"]
