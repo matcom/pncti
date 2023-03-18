@@ -94,7 +94,7 @@ def delete_application():
     st.warning(f"⚠️ Aplicación **{app.title}** eliminada satisfactoriamente.")
 
 with sections[0]:
-    left, right = show_app_state(app, expert=True)
+    left, right = show_app_state(app, expert=False)
     
     with left:
         st.write("#### Acciones")
