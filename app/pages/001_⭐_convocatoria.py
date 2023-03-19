@@ -34,7 +34,7 @@ if st.session_state.role != "Dirección de Proyecto":
 
 def send_application(title, project_type, *args):
     app = Application(title=title, project_type=project_type, program=st.session_state.program, owner=st.session_state.user, path=st.session_state.path)
-    app.create(docs=args)
+    app.create(*args)
 
     st.session_state.title = ""
     st.session_state.project_type = ""

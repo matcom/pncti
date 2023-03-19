@@ -50,6 +50,10 @@ df = pd.DataFrame(df).set_index("No")
 
 with st.expander(f"Listado de aplicaciones ({len(df)})"):
     st.table(df)
+    df.to_excel(f"{st.session_state.path}/Aplicaciones.xlsx")
+    st.download_button(label="Descargar Tabla", 
+                       data=open(f"{st.session_state.path}/Aplicaciones.xlsx", "rb"),
+                       file_name="Aplicaciones.xlsx")
 
 app: Application = applications[st.selectbox("Seleccione una aplicación", applications)]
 
