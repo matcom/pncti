@@ -2,6 +2,7 @@ import collections
 from uuid import UUID, uuid4
 from pathlib import Path
 import enum
+import shutil, os
 
 from pydantic import BaseModel, Field
 from fastapi.encoders import jsonable_encoder
@@ -23,6 +24,7 @@ class Application(BaseModel):
     path: str
 
     # estado
+    moved: str = None
     doc_review: Status = Status.pending
     expert_1_review: Status = Status.pending
     expert_2_review: Status = Status.pending
@@ -50,8 +52,11 @@ class Application(BaseModel):
     def create(self, docs):
         uuid = self.save()
         for doc in docs:
-            with open(f"{self.path}/applications/{doc['key'].capitalize()}-{uuid}.{doc['extension']}", "wb") as fp:
-                fp.write(doc['file'].getbuffer())
+            self.save_doc(doc)
+    
+    def save_doc(self, doc):
+        with open(f"{self.path}/applications/{doc['key'].capitalize()}-{self.uuid}.{doc['extension']}", "wb") as fp:
+            fp.write(doc['file'].getbuffer())
 
     def save(self):
         uuid = str(self.uuid)
@@ -67,15 +72,45 @@ class Application(BaseModel):
 
         for fname in (Path(self.path) / "applications").rglob(f"*-{uuid}.*"):
             fname.unlink()
+            
+    def move(self, old_program, new_program, new_path):
+        uuid = str(self.uuid)
+        
+        for fname in (Path(self.path) / "applications").rglob(f"*-{uuid}.*"):
+            shutil.move(os.path.join(f"{self.path}/applications", fname), f"{new_path}/applications")
+        self.moved = old_program
+        self.program = new_program
+        self.path = new_path
+        self.reset()
+        
+    def reset(self):
+        self.doc_review: Status = Status.pending
+        self.expert_1_review: Status = Status.pending
+        self.expert_2_review: Status = Status.pending
+        self.budget_review: Status = Status.pending
+        self.social_review: Status = Status.pending
+        self.overal_review: Status = Status.pending
+
+        self.expert_1_score: int = 0
+        self.expert_2_score: int = 0
+        self.budget_score: int = 0
+        self.social_score: int = 0
+
+        # expertos
+        self.expert_1: str = None
+        self.expert_2: str = None
+        
+        self.experts: dict = {} 
 
     def file(self, file_name, open_mode='rb', expert=None):
         prefix, extension = file_name.split(".")
         uuid = str(self.uuid)
         if not expert: expert = "" # Parche porque ya las aplicaciones están creadas
         file_name = f"{self.path}/applications/{prefix + expert}-{uuid}.{extension}"
-        if Path(file_name).exists():
+        if open_mode.find('w') != -1:
             return open(file_name, open_mode)
-        return False
+        else:
+            return open(file_name, open_mode) if Path(file_name).exists() else False
 
     def save_expert_eval(self, expert, file_name, doc, extension):
         with open(f"{self.path}/applications/{file_name.capitalize() + expert}-{self.uuid}.{extension}", "wb") as fp:

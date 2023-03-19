@@ -14,9 +14,21 @@ programs:
         download: True
         upload: True
     project_types:
-      Investigación Básica: anexo4
-      Investigación Aplicada y Desarrollo: anexo5
-      Innovación: anexo6
+      Investigación Básica: 
+        doc: anexo4
+        regular: 1
+        budget: 1
+        social: 1
+      Investigación Aplicada y Desarrollo: 
+        doc: anexo5
+        regular: 1
+        budget: 1
+        social: 1
+      Innovación: 
+        doc: anexo6
+        regular: 1
+        budget: 1
+        social: 1
     announcement:
       header:
         ⭐ Bienvenido a la Convocatoria 2023 para el Programa Nacional de Ciencias Básicas
@@ -30,7 +42,7 @@ programs:
     experts:
       regular: 
         number: 3
-        form: stadard
+        form: standard
         coeficent: 1
       budget:
         number: 1
@@ -62,9 +74,21 @@ programs:
         download: False
         upload: True
     project_types:
-      Investigación Básica: anexo4
-      Investigación Aplicada y Desarrollo: anexo5
-      Fortalecimiento Institucional: anexo6
+      Investigación Básica: 
+        doc: anexo4
+        regular: 1
+        budget: 1
+        social: 1
+      Investigación Aplicada y Desarrollo: 
+        doc: anexo5
+        regular: 1
+        budget: 1
+        social: 1
+      Fortalecimiento Institucional: 
+        doc: anexo6
+        regular: 1
+        budget: 1
+        social: 1
     announcement:
       header:
         ⭐ Bienvenido a la Convocatoria 2023 para Proyectos Institucionales de la UH
@@ -104,9 +128,21 @@ programs:
         download: True
         upload: True
     project_types:
-      Investigación Básica: anexo4
-      Investigación Aplicada y Desarrollo: anexo5
-      Innovación: anexo6
+      Investigación Básica: 
+        doc: anexo4
+        regular: 1
+        budget: 1
+        social: 1
+      Investigación Aplicada y Desarrollo: 
+        doc: anexo5
+        regular: 1
+        budget: 1
+        social: 1
+      Innovación: 
+        doc: anexo6
+        regular: 1
+        budget: 1
+        social: 1
     announcement:
       header:
         ⭐ Bienvenido a la Convocatoria 2023 para el Programa de Ciencias Sociales y Humanísticas
@@ -121,15 +157,12 @@ programs:
       regular: 
         number: 3
         form: stadard
-        coeficent: 1
       budget:
         number: 1
         form: standard
-        coeficent: 1
       social:
         number: 1
         form: standard
-        coeficent: 1
 
 docs:
   anexo3:
