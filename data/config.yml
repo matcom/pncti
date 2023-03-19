@@ -43,15 +43,12 @@ programs:
       regular: 
         number: 3
         form: standard
-        coeficent: 1
       budget:
         number: 1
         form: standard
-        coeficent: 1
       social:
         number: 1
         form: standard
-        coeficent: 1
 
   PIUH:
     name: PIUH - Proyectos Institucionales UH
@@ -103,15 +100,12 @@ programs:
       regular: 
         number: 3
         form: stadard
-        coeficent: 1
       budget:
         number: 1
         form: standard
-        coeficent: 1
       social:
         number: 1
         form: standard
-        coeficent: 1
 
   CSH:
     name: CSH - Ciencias Sociales y Humanidades

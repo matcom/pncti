@@ -49,7 +49,7 @@ class Application(BaseModel):
     def __hash__(self) -> int:
         return hash(self.uuid)
 
-    def create(self, docs):
+    def create(self, *docs):
         uuid = self.save()
         for doc in docs:
             self.save_doc(doc)
