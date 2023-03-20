@@ -40,6 +40,8 @@ class Application(BaseModel):
     # expertos
     expert_1: str = None
     expert_2: str = None
+    expert_1_notify = False
+    expert_2_notify = False
     
     experts: dict = {}
 
@@ -99,6 +101,8 @@ class Application(BaseModel):
         # expertos
         self.expert_1: str = None
         self.expert_2: str = None
+        self.expert_1_notify = False
+        self.expert_2_notify = False
         
         self.experts: dict = {} 
 

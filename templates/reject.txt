@@ -1,0 +1,7 @@
+Estado de la aplicación $application
+
+$message
+
+------
+Mensaje de la Dirección del Programa $program
+------
