@@ -1,0 +1,9 @@
+Aplicación asignada
+
+Hola $user:
+A usted se le ha asignado la aplicación $application, la cual es un proyecto de $proj_type del programa $program.
+Ya puede comenzar su revisión. Saludos.
+
+-----
+Mensaje de la Dirección del Programa $program
+-----
