@@ -1,9 +1,9 @@
 import collections
+from typing import Dict
 from uuid import UUID, uuid4
 from pathlib import Path
 import enum
 import shutil, os
-
 from pydantic import BaseModel, Field
 from fastapi.encoders import jsonable_encoder
 from yaml import safe_dump, safe_load
@@ -14,6 +14,23 @@ class Status(enum.Enum):
     accept = "Completado"
     reject = "Rechazado"
 
+
+class Evaluation(BaseModel):
+    final_score: float = 0
+    coeficent: float = 1
+    review: Status = Status.pending
+
+class Expert(BaseModel):
+    username: str = None
+    role: str
+    emails: list = []
+    evaluation: Evaluation = None
+    notify: bool = False
+
+    def reset(self):
+        self.username = None
+        self.evaluation.review = Status.pending
+        self.notify = False
 
 class Application(BaseModel):
     uuid: UUID = Field(default_factory=uuid4)
@@ -40,10 +57,10 @@ class Application(BaseModel):
     # expertos
     expert_1: str = None
     expert_2: str = None
-    expert_1_notify = False
-    expert_2_notify = False
+    expert_1_notify: bool = False
+    expert_2_notify: bool = False
     
-    experts: dict = {}
+    experts: Dict[str, Expert] = {}
 
     def __eq__(self, __o: object) -> bool:
         return isinstance(__o, Application) and self.uuid == __o.uuid
@@ -86,24 +103,7 @@ class Application(BaseModel):
         self.reset()
         
     def reset(self):
-        self.doc_review: Status = Status.pending
-        self.expert_1_review: Status = Status.pending
-        self.expert_2_review: Status = Status.pending
-        self.budget_review: Status = Status.pending
-        self.social_review: Status = Status.pending
-        self.overal_review: Status = Status.pending
-
-        self.expert_1_score: int = 0
-        self.expert_2_score: int = 0
-        self.budget_score: int = 0
-        self.social_score: int = 0
-
-        # expertos
-        self.expert_1: str = None
-        self.expert_2: str = None
-        self.expert_1_notify = False
-        self.expert_2_notify = False
-        
+        self.doc_review: Status = Status.pending        
         self.experts: dict = {} 
 
     def file(self, file_name, open_mode='rb', expert=None):
@@ -129,7 +129,7 @@ class Application(BaseModel):
                 continue
 
             if expert:
-                if app.expert_1 == user or app.expert_2 == user:
+                if user in [e.username for e in app.experts.values()]:
                     yield app
 
             elif user is None or app.owner == user :
@@ -143,14 +143,3 @@ class Application(BaseModel):
             result[app.title] = app
 
         return result
-
-class Evaluation(BaseModel):
-    final_score: float = 0
-    coeficent: float = 1
-
-class Expert(BaseModel):
-    username: str
-    role: str
-    emails: list = []
-    evaluation: Evaluation()
-    count: int = 0

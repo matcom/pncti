@@ -27,18 +27,6 @@ if not app:
 
 left, right = show_app_state(app, expert=True)
 
-# with left:
-#     score = st.number_input(label="Inserte la puntuación", min_value=0, value=0)
-#     if score:
-#         if app.expert_1 == st.session_state.user:
-#             app.expert_1_score = score
-#         else:
-#             app.expert_2_score = score
-#         app.save()
-#         st.success("✅ Se ha introducido la puntuación correctamente")
-#     else:
-#         st.warning("⚠️ Debe introducir la puntuación")
-
 with right:
     st.write("#### Evaluación")
 

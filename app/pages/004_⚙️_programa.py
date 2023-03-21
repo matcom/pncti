@@ -3,7 +3,7 @@ import streamlit as st
 import yaml
 import auth
 
-from models import Application, Status
+from models import Application, Status, Expert, Evaluation
 from utils import show_app_state
 from tools import send_from_template
 
@@ -14,7 +14,6 @@ user = auth.authenticate()
 st.header("⚙️ Gestión del Programa")
 
 config = yaml.safe_load(open("/src/data/config.yml"))
-
 if st.session_state.role != "Dirección de Programa":
     st.warning(
         "⚠️ Esta sección solo está disponible para el rol de **Dirección de Programa**."
@@ -27,6 +26,7 @@ df = []
 
 roles = yaml.safe_load(open("/src/data/roles.yml"))[st.session_state.program]
 experts = roles['Experto']
+program = config["programs"][st.session_state.program]
 
 if not applications:
     st.warning(
@@ -35,14 +35,14 @@ if not applications:
     st.stop()
     
 for i, app in enumerate(applications.values()):
+    exp_table = {key:experts[value.username] if value.username else "" for key,value in app.experts.items() if value.role == "regular"}
     df.append(
         dict(
             No=i+1,
             Título=app.title,
             Tipo=app.project_type,
             Jefe=app.owner,
-            Experto1=experts[app.expert_1] if app.expert_1 else "",
-            Experto2=experts[app.expert_2] if app.expert_2 else "",
+            **exp_table
         )
     )
 
@@ -61,6 +61,14 @@ if app is None:
     st.stop()
 
 sections = st.tabs(["General", "Expertos"])
+
+if not app.experts:
+    for key, value in program["experts"].items():
+        for i in range(value["number"]):
+            app.experts[f"{value['name']} {i+1}"] = Expert(role=key, 
+                                                           evaluation=Evaluation(coeficent=program["project_types"][app.project_type][key]))
+    app.save()
+
 
 def email_form(struct, template, to_email, key, **kwargs):
     with struct.expander("📧 Enviar correo"):
@@ -91,7 +99,6 @@ def review_docs(app: Application):
                application=app.title,
                program=app.program)
     
-
 def move_app(app: Application):
     "Mover aplicación a otro programa"
     
@@ -125,16 +132,16 @@ with sections[0]:
         if st.checkbox(f"Soy conciente de que perderé todos los datos de la aplicación **{app.title}**.", key="delete-app"):
             st.button("🔴 Eliminar Aplicación", on_click=delete_application)
 
-def assign_expert(app: Application, i: int, struct):
+def assign_expert(app: Application, name: str, role: str, struct):
     "Asignar experto"
 
     value = struct.selectbox(label="Expertos", options=[f"{name} ({email})" for email, name in experts.items() 
-                                                    if email != app.expert_1 and email != app.expert_2],
-                         key=f"sb_expert{i}")
+                                                    if not sum([1 for e in app.experts.values() if e.username == email])],
+                         key=f"sb{name.strip()}{app.uuid}")
     expert = value.split("(")[-1][:-1]
     
-    def assign_expert(app, value):
-        setattr(app, f'expert_{i}', expert)
+    def assign_expert(app: Application, value, role):
+        app.experts[name].username = expert
         
         send_from_template("expert_notify", expert, 
                            user=experts[expert],
@@ -142,43 +149,42 @@ def assign_expert(app: Application, i: int, struct):
                            proj_type=app.project_type,
                            program=st.session_state.program,
                            )
-        setattr(app, f"expert_{i}_notify", True)
+        app.experts[name].notify = True
         app.save()
         
                 
-    assign = struct.button("🎩 Asignar experto", on_click=assign_expert, args=(app, value), key=f"b_expert{i}")
-    if getattr(app, f"expert_{i}_notify"):
+    assign = struct.button("🎩 Asignar experto", on_click=assign_expert, args=(app, value, role), key=f"b{name.strip()}{app.uuid}")
+    if app.experts[name].notify:
         struct.info("El experto fue notificado", icon="ℹ️")
     
-def unassign_expert(app: Application, i: int):
+def unassign_expert(app: Application, name: str):
     "Quitar asignación"
     
-    setattr(app, f"expert_{i}", None)
-    setattr(app, f"expert_{i}_score", 0)
-    setattr(app, f"expert_{i}_review", Status.pending)
-    setattr(app, f"expert_{i}_notify", False)
-    
+    app.experts[name].username = None
+    app.experts[name].notify = False
     app.save()
 
-with sections[1]:
+with sections[1]:    
     st.write(f"#### Evaluación de los expertos")
     
     anexo = config["programs"][app.program]["project_types"][app.project_type]["doc"]
     name = config["docs"][anexo]["name"]
     file_name = config["docs"][anexo]["file_name"]
+
+    evaluators = list(app.experts.keys())
+    tabs = st.tabs(evaluators)
     
-    tabs = st.tabs(["Experto 1", "Experto 2"])
     for i, tab in enumerate(tabs):
-        exp = getattr(app, f"expert_{i+1}")
-        count = sum([1 for app in applications.values() if app.expert_1 == exp or app.expert_2 == exp])
-        if exp not in experts.keys():
+        exp = app.experts[evaluators[i]]
+        count = sum([1 for app in applications.values() if exp.username in [e.username for e in app.experts.values()]])
+        if exp.username not in experts.keys():
             tab.warning("No está asignado", icon="⚠️")
-            assign_expert(app, i+1, tab)
+            assign_expert(app, evaluators[i], exp.role, tab)
            
         else:
-            tab.write(f"**Nombre:** {experts[exp]} ({count})")
+            tab.write(f"**Nombre:** {experts[exp.username]} ({count})")
         
-            exp_file = app.file(file_name=file_name, expert=exp)
+            exp_file = app.file(file_name=file_name, expert=exp.username)
             if exp_file:
                 tab.download_button(
                     f"⏬ Descargar última versión subida del {name}", exp_file, file_name=file_name
@@ -187,8 +193,8 @@ with sections[1]:
                 tab.warning("No hay evaluación de este experto", icon="⚠️")
                 
                 
-            email_form(tab, "program", exp, f"expert_{i}",
+            email_form(tab, "program", exp.username, f"expert_{i}",
                        program=st.session_state.program, 
                        user=roles["Dirección de Programa"][st.session_state.user])
                     
-            tab.button(label="⛔ Quitar asignación", on_click=unassign_expert, args=[app, i+1], key=f"u_expert{i}")
+            tab.button(label="⛔ Quitar asignación", on_click=unassign_expert, args=[app, evaluators[i]], key=f"u_expert{i}_{app.uuid}")

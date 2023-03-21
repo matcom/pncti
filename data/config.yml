@@ -42,12 +42,15 @@ programs:
     experts:
       regular: 
         number: 3
+        name: Experto
         form: standard
       budget:
         number: 1
+        name: Presupuesto
         form: standard
       social:
         number: 1
+        name: Impacto Social
         form: standard
 
   PIUH:
@@ -99,12 +102,15 @@ programs:
     experts:
       regular: 
         number: 3
+        name: Experto
         form: stadard
       budget:
         number: 1
+        name: Presupuesto
         form: standard
       social:
         number: 1
+        name: Impacto Social
         form: standard
 
   CSH:
@@ -150,12 +156,15 @@ programs:
     experts:
       regular: 
         number: 3
+        name: Experto
         form: stadard
       budget:
         number: 1
+        name: Presupuesto
         form: standard
       social:
         number: 1
+        name: Impacto Social
         form: standard
 
 docs:

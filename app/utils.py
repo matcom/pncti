@@ -70,10 +70,8 @@ def show_app_state(app, expert=False):
                 st.success(f"🟢 {title}: **Completado**")
 
         report_status("Revisión de la documentación inicial", app.doc_review)
-        report_status("Evaluación del Experto No. 1", app.expert_1_review)
-        report_status("Evaluación del Experto No. 2", app.expert_2_review)
-        report_status("Evaluación del Presupuesto", app.budget_review)
-        report_status("Evaluación del Impacto Social", app.social_review)
+        for key,value in app.experts.items():
+            report_status(f"Evaluación del {key}", value.evaluation.review)
         report_status("Evaluación Final", app.overal_review)
 
     return left, right
