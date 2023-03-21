@@ -76,7 +76,7 @@ def email_form(struct, template, to_email, key, **kwargs):
         email.caption(f"A: {to_email}")
         message = email.text_area("Mensaje")
         kwargs["message"] = message
-        submited = email.form_submit_button(label="📧 Enviar")
+        submited = email.form_submit_button(label="Enviar")
         if submited:
             send_from_template(template, to_email, **kwargs)    
 
@@ -154,8 +154,6 @@ def assign_expert(app: Application, name: str, role: str, struct):
         
                 
     assign = struct.button("🎩 Asignar experto", on_click=assign_expert, args=(app, value, role), key=f"b{name.strip()}{app.uuid}")
-    if app.experts[name].notify:
-        struct.info("El experto fue notificado", icon="ℹ️")
     
 def unassign_expert(app: Application, name: str):
     "Quitar asignación"
@@ -191,7 +189,9 @@ with sections[1]:
                 )
             else:
                 tab.warning("No hay evaluación de este experto", icon="⚠️")
-                
+            
+            if exp.notify:
+                tab.info("El experto fue notificado", icon="ℹ️")
                 
             email_form(tab, "program", exp.username, f"expert_{i}",
                        program=st.session_state.program, 
