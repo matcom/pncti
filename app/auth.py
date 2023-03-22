@@ -6,13 +6,11 @@ from itsdangerous.exc import BadData
 import yaml
 import os
 
-info = yaml.safe_load(open("/src/data/info.yml"))['auth']
-roles = yaml.safe_load(open("/src/data/roles.yml"))
-config = yaml.safe_load(open("/src/data/config.yml"))
 cookie = "PNCTI-AuthToken"
 
 
 def login(user, role, program):
+    config = yaml.safe_load(open("/src/data/config.yml"))
     st.session_state.user = user
     st.session_state.role = role
     st.session_state.program = program
@@ -38,6 +36,8 @@ def logout():
 
 
 def authenticate():
+    config = yaml.safe_load(open("/src/data/config.yml"))
+    info = yaml.safe_load(open("/src/data/info.yml"))['auth']
     if os.getenv('IGNORE_AUTH'):
         user = os.getenv("ADMIN")
         role = st.session_state.get('role', config['roles'][2])
@@ -104,6 +104,7 @@ def authenticate():
 
 
 def check_email_role(email, program, role):
+    roles = yaml.safe_load(open("/src/data/roles.yml"))
     if role == "Dirección de Proyecto":
         return True
 
