@@ -35,14 +35,16 @@ if not applications:
     st.stop()
     
 for i, app in enumerate(applications.values()):
-    exp_table = {key:experts[value.username] if value.username else "" for key,value in app.experts.items() if value.role == "regular"}
+    exp_table = {key:f"{experts[value.username]} ({value.evaluation.final_score})" if value.username else "" 
+                 for key,value in app.experts.items()} #if value.role == "regular"}
+    exp_table["Total"] = sum([value.evaluation.coeficent * value.evaluation.final_score for key, value in app.experts.items()])
     df.append(
         dict(
             No=i+1,
             Título=app.title,
             Tipo=app.project_type,
             Jefe=app.owner,
-            **exp_table
+            **exp_table,
         )
     )
 
