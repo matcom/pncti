@@ -14,7 +14,6 @@ class Status(enum.Enum):
     accept = "Completado"
     reject = "Rechazado"
 
-
 class Evaluation(BaseModel):
     final_score: float = 0
     coeficent: float = 1

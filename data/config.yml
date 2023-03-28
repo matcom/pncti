@@ -19,16 +19,19 @@ programs:
         regular: 1
         budget: 1
         social: 1
+        max_value: 90
       Investigación Aplicada y Desarrollo: 
         doc: anexo5
         regular: 1
         budget: 1
         social: 1
+        max_value: 90
       Innovación: 
         doc: anexo6
         regular: 1
         budget: 1
         social: 1
+        max_value: 90
     announcement:
       header:
         ⭐ Bienvenido a la Convocatoria 2023 para el Programa Nacional de Ciencias Básicas
@@ -79,16 +82,19 @@ programs:
         regular: 1
         budget: 1
         social: 1
+        max_value: 100
       Investigación Aplicada y Desarrollo: 
         doc: anexo5
         regular: 1
         budget: 1
         social: 1
+        max_value: 100
       Fortalecimiento Institucional: 
         doc: anexo6
         regular: 1
         budget: 1
         social: 1
+        max_value: 100
     announcement:
       header:
         ⭐ Bienvenido a la Convocatoria 2023 para Proyectos Institucionales de la UH
@@ -133,16 +139,19 @@ programs:
         regular: 1
         budget: 1
         social: 1
+        max_value: 90
       Investigación Aplicada y Desarrollo: 
         doc: anexo5
         regular: 1
         budget: 1
         social: 1
+        max_value: 90
       Innovación: 
         doc: anexo6
         regular: 1
         budget: 1
         social: 1
+        max_value: 90
     announcement:
       header:
         ⭐ Bienvenido a la Convocatoria 2023 para el Programa de Ciencias Sociales y Humanísticas
