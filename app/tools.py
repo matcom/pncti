@@ -31,8 +31,8 @@ class EmailSender:
         # The email client will try to render the last part first
         message.attach(part1)
         # message.attach(part2)
-
-        while True:
+        tries = 0
+        while tries < 3:
             try:
                 server.sendmail(from_email, to_email, message.as_string())
                 print("Email sended", flush=True)
@@ -40,6 +40,7 @@ class EmailSender:
             except Exception:
                 # TODO: handle the specific exception
                 print("Email send failed, retrying in 3 seconds.", flush=True)
+                tries += 1
             time.sleep(3)
 
     @staticmethod
@@ -53,7 +54,8 @@ class EmailSender:
     @staticmethod
     def _sender_from_template_target(template, to_email, **data):
         sended = False
-        while not sended:
+        tries = 0
+        while not sended and tries < 3:
             try:
                 context = ssl.create_default_context()
 
@@ -89,6 +91,7 @@ class EmailSender:
             except Exception:
                 # TODO: handle the specific exception
                 print("Email send failed, retrying in 3 seconds.", flush=True)
+                tries += 1
 
             if not sended:
                 time.sleep(3)
