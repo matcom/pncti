@@ -35,8 +35,8 @@ if not applications:
     st.stop()
     
 for i, app in enumerate(applications.values()):
-    exp_table = {key:f"{experts[value.username]} ({value.evaluation.final_score})" if value.username else "" 
-                 for key,value in app.experts.items()} #if value.role == "regular"}
+    exp_table = {key:f"{experts[value.username]} ({value.evaluation.final_score})" if value.username in experts.keys() else "" 
+                 for key,value in app.experts.items()}
     exp_table["Total"] = sum([value.evaluation.coeficent * value.evaluation.final_score for key, value in app.experts.items()])
     df.append(
         dict(
@@ -136,7 +136,8 @@ with sections[0]:
 
 def assign_expert(app: Application, name: str, role: str, struct):
     "Asignar experto"
-
+    
+    unassign_expert(app, name)
     value = struct.selectbox(label="Expertos", options=[f"{name} ({email})" for email, name in experts.items() 
                                                     if not sum([1 for e in app.experts.values() if e.username == email])],
                          key=f"sb{name.strip()}{app.uuid}")
@@ -160,8 +161,7 @@ def assign_expert(app: Application, name: str, role: str, struct):
 def unassign_expert(app: Application, name: str):
     "Quitar asignación"
     
-    app.experts[name].username = None
-    app.experts[name].notify = False
+    app.experts[name].reset()
     app.save()
 
 with sections[1]:    
