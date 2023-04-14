@@ -3,11 +3,10 @@ from typing import Dict
 from uuid import UUID, uuid4
 from pathlib import Path
 import enum
-import shutil, os
+import shutil, os, zipfile, logging
 from pydantic import BaseModel, Field
 from fastapi.encoders import jsonable_encoder
 from yaml import safe_dump, safe_load
-
 
 class Status(enum.Enum):
     pending = "Pendiente"
@@ -105,6 +104,21 @@ class Application(BaseModel):
         self.doc_review: Status = Status.pending        
         self.experts: dict = {} 
 
+    def zip_file(self):
+        files_app = [file for file in Path(f"{self.path}/applications").glob(f"*{self.uuid}.*") 
+                     if file.name.split('.')[-1]!='yml']
+
+        folder_name = f"{self.uuid}-temp-files"
+
+        with zipfile.ZipFile(folder_name + '.zip', 'w', zipfile.ZIP_DEFLATED) as zip_file:
+            for file in files_app:
+                zip_file.write(file, f"{self.title}/" + file.name.replace(f"-{self.uuid}", ""))
+        
+        zip_file = open(folder_name + '.zip', 'rb').read()
+        os.remove(folder_name + '.zip')
+        return zip_file
+            
+            
     def file(self, file_name, open_mode='rb', expert=None):
         prefix, extension = file_name.split(".")
         uuid = str(self.uuid)
