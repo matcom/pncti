@@ -25,7 +25,7 @@ def show_app_state(app, expert=False):
 
     with right:
         st.write(f"#### Documentación de la aplicación")
-        st.download_button("📦 Descargar toda", app.zip_file(), file_name=f"{app.title}.zip")
+        st.download_button("📦 Descargarla toda", app.zip_file(), file_name=f"{app.title}.zip", help="Descarga un comprimido con todos los archivos del proyecto")
         for key in config["programs"][app.program]["docs"].keys():
             name = config["docs"][key]["name"]
             file_name = config["docs"][key]["file_name"]
