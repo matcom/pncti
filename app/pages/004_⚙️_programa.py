@@ -22,7 +22,7 @@ if st.session_state.role != "Dirección de Programa":
 
 applications = Application.load_from(program=st.session_state.program)
 
-df = []
+df, exp_df = [], []
 
 roles = yaml.safe_load(open("/src/data/roles.yml"))[st.session_state.program]
 experts = roles['Experto']
@@ -37,6 +37,8 @@ if not applications:
 for i, app in enumerate(applications.values()):
     exp_table = {key:f"{experts[value.username]} ({value.evaluation.final_score})" if value.username in experts.keys() else "" 
                  for key,value in app.experts.items()}
+    exp_scores = {key:f"{value.evaluation.final_score}" if value.username in experts.keys() else "" 
+                 for key,value in app.experts.items()}
     exp_table["Total"] = sum([value.evaluation.coeficent * value.evaluation.final_score for key, value in app.experts.items()])
     df.append(
         dict(
@@ -47,15 +49,28 @@ for i, app in enumerate(applications.values()):
             **exp_table,
         )
     )
-
+    exp_df.append(
+        dict(
+            No=i+1,
+            Título=app.title,
+            Tipo=app.project_type,
+            Jefe=app.owner,
+            **exp_scores,
+        )
+    )
 df = pd.DataFrame(df).set_index("No")
+exp_df = pd.DataFrame(exp_df).set_index("No")
 
 with st.expander(f"Listado de aplicaciones ({len(df)})"):
     st.table(df)
     df.to_excel(f"{st.session_state.path}/Aplicaciones.xlsx")
-    st.download_button(label="⏬ Descargar Tabla", 
+    exp_df.to_excel(f"{st.session_state.path}/Puntuaciones.xlsx")
+    st.download_button(label="📊 Descargar Tabla", 
                        data=open(f"{st.session_state.path}/Aplicaciones.xlsx", "rb"),
                        file_name="Aplicaciones.xlsx")
+    st.download_button(label="⏬ Descargar Puntuaciones", 
+                       data=open(f"{st.session_state.path}/Puntuaciones.xlsx", "rb"),
+                       file_name="Puntuaciones.xlsx")
 
 app: Application = applications[st.selectbox("Seleccione una aplicación", applications)]
 
