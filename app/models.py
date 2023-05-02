@@ -8,6 +8,10 @@ from pydantic import BaseModel, Field
 from fastapi.encoders import jsonable_encoder
 from yaml import safe_dump, safe_load
 
+class Phase(enum.Enum):
+    announcement = "Convocatoria"
+    execution = "Ejecución"
+    
 class Status(enum.Enum):
     pending = "Pendiente"
     accept = "Completado"
@@ -24,6 +28,7 @@ class Expert(BaseModel):
     emails: list = []
     evaluation: Evaluation = None
     notify: bool = False
+    phase: Phase = Phase.announcement
 
     def reset(self):
         self.username = None
@@ -59,6 +64,8 @@ class Application(BaseModel):
     expert_2_notify: bool = False
     
     experts: Dict[str, Expert] = {}
+    
+    phase: Phase = Phase.announcement
 
     def __eq__(self, __o: object) -> bool:
         return isinstance(__o, Application) and self.uuid == __o.uuid
@@ -134,25 +141,26 @@ class Application(BaseModel):
             fp.write(doc.getbuffer())
 
     @classmethod
-    def _load_from(cls, program, user=None, expert=False):
+    def _load_from(cls, program, phase, user=None, expert=False):
         for file in Path(f"/src/data/programs/{program.lower()}/applications").glob("*.yml"):
             app = Application(**safe_load(file.open()))
 
             if app.program != program:
                 continue
+            
+            if app.phase.value == phase:
+                if expert:
+                    if user in [e.username for e in app.experts.values()]:
+                        yield app
 
-            if expert:
-                if user in [e.username for e in app.experts.values()]:
+                elif user is None or app.owner == user:
                     yield app
 
-            elif user is None or app.owner == user :
-                yield app
-
     @classmethod
-    def load_from(cls, program, user=None, expert=False):
+    def load_from(cls, program, phase="announcement", user=None, expert=False):
         result = collections.defaultdict(lambda: None)
 
-        for app in Application._load_from(program, user, expert):
+        for app in Application._load_from(program, phase, user, expert):
             result[app.title] = app
 
         return result

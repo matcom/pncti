@@ -1,5 +1,6 @@
 import streamlit as st
-import random
+import random, datetime
+from yaml import safe_load
 import auth
 
 from models import Application, Status
@@ -17,10 +18,10 @@ if st.session_state.role != "Dirección de Proyecto":
     st.stop()
 
 applications = Application.load_from(program=st.session_state.program, user=st.session_state.user)
-
 st.info(f"Usted tiene **{len(applications)}** aplicaciones enviadas.")
 
-app: Application = applications[st.selectbox("Seleccione una aplicación", applications)]
+app: Application = applications[st.selectbox("Seleccione una aplicación", [item[0] for item in sorted(applications.items(), key=lambda x: x[1].accepted, reverse=True)])]
+app.save()
 
 if not app:
     st.stop()
