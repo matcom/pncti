@@ -12,7 +12,8 @@ user = auth.authenticate()
 info = yaml.safe_load(open("/src/data/info.yml"))
 config = yaml.safe_load(open("/src/data/config.yml"))
 
-announcement = config['programs'][st.session_state.program]['announcement']
+program = config['programs'][st.session_state.program]
+announcement = program['announcement']
 st.header(
     announcement['header']
 )
@@ -51,19 +52,17 @@ st.info(
 
 st.write("### Datos del Proyecto")
 
-program = config['programs'][st.session_state.program]
-
 left, right = st.columns(2)
 
 with right:
     msg = announcement["basic"]
-    for pt in program['project_types'].keys():
+    for pt in announcement['project_types'].keys():
         msg += f"- **{pt}**: {info['project_types'][pt]}\n"
     st.info(msg)
 
 with left:
     title = st.text_input("Título del proyecto", key="title")
-    project_type = st.selectbox("Tipo de proyecto", [""] + list(program['project_types']), key="project_type")
+    project_type = st.selectbox("Tipo de proyecto", [""] + list(announcement['project_types']), key="project_type")
 
     if title and project_type:
         st.success("✅ Título y tipo de proyecto definido correctamente.")
@@ -76,7 +75,7 @@ ready = True
 
 args = [title, project_type]
 
-for key, value in program['docs'].items():
+for key, value in announcement['docs'].items():
     name = config['docs'][key]['name']
     extension = config['docs'][key]['extension']
     file_name = config['docs'][key]['file_name']

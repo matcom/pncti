@@ -30,7 +30,7 @@ left, right = show_app_state(app, expert=True)
 with right:
     st.write("#### Evaluación")
 
-    anexo = config["programs"][app.program]["project_types"][app.project_type]["doc"]
+    anexo = config["programs"][app.program]["announcement"]["project_types"][app.project_type]["doc"]
     name = config["docs"][anexo]["name"]
     file_name = config["docs"][anexo]["file_name"]
     extension = config["docs"][anexo]["extension"]
@@ -59,7 +59,7 @@ with right:
         st.success("Evaluación guardada satisfactoriamente", icon="✅")
         
     value = st.number_input(label="Evaluación Final", 
-                            max_value=config["programs"][st.session_state.program]["project_types"][app.project_type]["max_value"], 
+                            max_value=config["programs"][st.session_state.program]["announcement"]["project_types"][app.project_type]["max_value"], 
                             min_value=0, 
                             step=5)
     for role, expert in app.experts.items():

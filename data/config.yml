@@ -3,36 +3,8 @@ programs:
     name: PNCB - Programa Nacional de Ciencias Básicas
     path: /src/data/programs/pncb
     deadline: 2023-03-17 21:00:00
-    docs:
-      anexo3:
-        download: True
-        upload: True
-      avalCC:
-        download: False
-        upload: True
-      presupuesto:
-        download: True
-        upload: True
-    project_types:
-      Investigación Básica: 
-        doc: anexo4
-        regular: 1
-        budget: 1
-        social: 1
-        max_value: 90
-      Investigación Aplicada y Desarrollo: 
-        doc: anexo5
-        regular: 1
-        budget: 1
-        social: 1
-        max_value: 90
-      Innovación: 
-        doc: anexo6
-        regular: 1
-        budget: 1
-        social: 1
-        max_value: 90
-    announcement:
+    phase: Ejecución
+    Convocatoria:
       header:
         ⭐ Bienvenido a la Convocatoria 2023 para el Programa Nacional de Ciencias Básicas
       top_msg:
@@ -42,60 +14,79 @@ programs:
         \n\n
         Los tipos de proyecto disponibles son:\n
         "
-    experts:
-      regular: 
-        number: 3
-        name: Experto
-        form: standard
-      budget:
-        number: 1
-        name: Presupuesto
-        form: standard
-      social:
-        number: 1
-        name: Impacto Social
-        form: standard
+      experts:
+        regular: 
+          number: 3
+          name: Experto
+          form: standard
+        budget:
+          number: 1
+          name: Presupuesto
+          form: standard
+        social:
+          number: 1
+          name: Impacto Social
+          form: standard
+      docs:
+        anexo3:
+          download: True
+          upload: True
+        avalCC:
+          download: False
+          upload: True
+        presupuesto:
+          download: True
+          upload: True
+      project_types:
+        Investigación Básica: 
+          doc: anexo4
+          regular: 1
+          budget: 1
+          social: 1
+          max_value: 90
+        Investigación Aplicada y Desarrollo: 
+          doc: anexo5
+          regular: 1
+          budget: 1
+          social: 1
+          max_value: 90
+        Innovación: 
+          doc: anexo6
+          regular: 1
+          budget: 1
+          social: 1
+          max_value: 90
+      actions:
+        - move_app
+        - review_docs
+        - final_review
+    Ejecución:
+      docs:
+        informe: 
+          download: True
+          upload: True
+        avalCCert:
+          download: True
+          upload: True
+      experts:
+        regular:
+          number: 2
+          name: Experto
+          form: standard
+      project_types:
+        Certificación:
+          doc: anexo18
+          regular: 1
+          max_value: 100
+      actions:
+        - move_app
 
   PIUH:
     name: PIUH - Proyectos Institucionales UH
     path: /src/data/programs/piuh
     deadline: 2023-03-08 17:00:00
-    docs:
-      anexo3:
-        download: True
-        upload: True
-      presupuesto:
-        download: True
-        upload: True
-      cv:
-        download: False
-        upload: True
-      avalCC:
-        download: False
-        upload: True
-      carta:
-        download: False
-        upload: True
-    project_types:
-      Investigación Básica: 
-        doc: anexo4
-        regular: 1
-        budget: 1
-        social: 1
-        max_value: 100
-      Investigación Aplicada y Desarrollo: 
-        doc: anexo5
-        regular: 1
-        budget: 1
-        social: 1
-        max_value: 100
-      Fortalecimiento Institucional: 
-        doc: anexo6
-        regular: 1
-        budget: 1
-        social: 1
-        max_value: 100
-    announcement:
+    phase: Ejecución
+    Convocatoria:
       header:
         ⭐ Bienvenido a la Convocatoria 2023 para Proyectos Institucionales de la UH
       top_msg:
@@ -105,54 +96,85 @@ programs:
         \n\n
         Los tipos de proyecto disponibles son:\n
         "
-    experts:
-      regular: 
-        number: 3
-        name: Experto
-        form: stadard
-      budget:
-        number: 1
-        name: Presupuesto
-        form: standard
-      social:
-        number: 1
-        name: Impacto Social
-        form: standard
+      experts:
+        regular: 
+          number: 3
+          name: Experto
+          form: stadard
+        budget:
+          number: 1
+          name: Presupuesto
+          form: standard
+        social:
+          number: 1
+          name: Impacto Social
+          form: standard
+      docs:
+        anexo3:
+          download: True
+          upload: True
+        presupuesto:
+          download: True
+          upload: True
+        cv:
+          download: False
+          upload: True
+        avalCC:
+          download: False
+          upload: True
+        carta:
+          download: False
+          upload: True
+      project_types:
+        Investigación Básica: 
+          doc: anexo4
+          regular: 1
+          budget: 1
+          social: 1
+          max_value: 100
+        Investigación Aplicada y Desarrollo: 
+          doc: anexo5
+          regular: 1
+          budget: 1
+          social: 1
+          max_value: 100
+        Fortalecimiento Institucional: 
+          doc: anexo6
+          regular: 1
+          budget: 1
+          social: 1
+          max_value: 100
+      actions:
+        - move_app
+        - review_docs
+        - final_review
+    Ejecución:
+      docs:
+        informe: 
+          download: True
+          upload: True
+        avalCCert:
+          download: True
+          upload: True
+      experts:
+        regular:
+          number: 2
+          name: Experto
+          form: standard
+      project_types:
+        Certificación:
+          doc: anexo18
+          regular: 1
+          max_value: 100
+      actions:
+        - move_app
 
   CSH:
     name: CSH - Ciencias Sociales y Humanidades
     path: /src/data/programs/csh
     deadline: 2023-03-16 5:00:00
-    docs:
-      anexo3:
-        download: True
-        upload: True
-      avalCC:
-        download: False
-        upload: True
-      presupuesto:
-        download: True
-        upload: True
-    project_types:
-      Investigación Básica: 
-        doc: anexo4
-        regular: 1
-        budget: 1
-        social: 1
-        max_value: 90
-      Investigación Aplicada y Desarrollo: 
-        doc: anexo5
-        regular: 1
-        budget: 1
-        social: 1
-        max_value: 90
-      Innovación: 
-        doc: anexo6
-        regular: 1
-        budget: 1
-        social: 1
-        max_value: 90
-    announcement:
+    phase: Ejecución
+    Convocatoria:
       header:
         ⭐ Bienvenido a la Convocatoria 2023 para el Programa de Ciencias Sociales y Humanísticas
       top_msg:
@@ -162,19 +184,72 @@ programs:
         \n\n
         Los tipos de proyecto disponibles son:\n
         "
-    experts:
-      regular: 
-        number: 3
-        name: Experto
-        form: stadard
-      budget:
-        number: 1
-        name: Presupuesto
-        form: standard
-      social:
-        number: 1
-        name: Impacto Social
-        form: standard
+      experts:
+        regular: 
+          number: 3
+          name: Experto
+          form: stadard
+        budget:
+          number: 1
+          name: Presupuesto
+          form: standard
+        social:
+          number: 1
+          name: Impacto Social
+          form: standard
+      docs:
+        anexo3:
+          download: True
+          upload: True
+        avalCC:
+          download: False
+          upload: True
+        presupuesto:
+          download: True
+          upload: True
+      project_types:
+        Investigación Básica: 
+          doc: anexo4
+          regular: 1
+          budget: 1
+          social: 1
+          max_value: 90
+        Investigación Aplicada y Desarrollo: 
+          doc: anexo5
+          regular: 1
+          budget: 1
+          social: 1
+          max_value: 90
+        Innovación: 
+          doc: anexo6
+          regular: 1
+          budget: 1
+          social: 1
+          max_value: 90
+      actions:
+        - move_app
+        - review_docs
+        - final_review
+    Ejecución:
+      docs:
+        informe: 
+          download: True
+          upload: True
+        avalCCert:
+          download: True
+          upload: True
+      experts:
+        regular:
+          number: 2
+          name: Experto
+          form: standard
+      project_types:
+        Certificación:
+          doc: anexo18
+          regular: 1
+          max_value: 100
+      actions:
+        - move_app
 
 docs:
   anexo3:
@@ -193,6 +268,14 @@ docs:
     name: CV del Jefe del Proyecto
     extension: pdf
     file_name: Cv.pdf
+  informe:
+    name: Informe
+    extension: pdf
+    file_name: Informe.pdf
+  avalCCert:
+    name: AvalCC de Certificación
+    extension: pdf
+    file_name: AvalCCert.pdf
   carta:
     name: Carta del Decano o Director
     extension: pdf
@@ -206,9 +289,22 @@ docs:
     extension: xlsx
     file_name: Anexo5.xlsx
   anexo6:
-   name: Anexo 6
-   extension: xlsx
-   file_name: Anexo6.xlsx
+    name: Anexo 6
+    extension: xlsx
+    file_name: Anexo6.xlsx
+  anexo16:
+    name: Anexo 16
+    extension: xlsx
+    file_name: Anexo16.xlsx
+  anexo18:
+    name: Anexo 18
+    extension: xlsx
+    file_name: Anexo18.xlsx
+  anexo19:
+    name: Anexo 19
+    extension: xlsx
+    file_name: Anexo19.xlsx
+  
 
 roles:
   - "Dirección de Proyecto"
