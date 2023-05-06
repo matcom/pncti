@@ -3,9 +3,10 @@ import streamlit as st
 import yaml
 import auth
 
-from models import Application, Status, Expert, Evaluation
+from models import Application, Status, Expert, Evaluation, Phase
 from utils import show_app_state
 from tools import send_from_template
+from fastapi.encoders import jsonable_encoder
 
 
 st.set_page_config(page_title="Proyectos UH - Programa", page_icon="⚙️", layout="wide")
@@ -20,17 +21,19 @@ if st.session_state.role != "Dirección de Programa":
     )
     st.stop()
 
-applications = Application.load_from(program=st.session_state.program)
+phases = [Phase.announcement, Phase.execution]
+phase = st.select_slider("Mostrar proyectos en:", map(lambda x: x.value, phases), value=Phase.execution.value)
+applications = Application.load_from(program=st.session_state.program, phase=phase)
 
 df, exp_df = [], []
 
-roles = yaml.safe_load(open("/src/data/roles.yml"))[st.session_state.program]
-experts = roles['Experto']
+roles = yaml.safe_load(open("/src/data/roles.yml"))
+experts = roles[st.session_state.program]['Experto']
 program = config["programs"][st.session_state.program]
 
 if not applications:
     st.warning(
-        "⚠️ No hay aplicaciones registradas en el programa."
+        "⚠️ No hay aplicaciones registradas en esta fase."
     )
     st.stop()
     
@@ -77,13 +80,13 @@ app: Application = applications[st.selectbox("Seleccione una aplicación", appli
 if app is None:
     st.stop()
 
-sections = st.tabs(["General", "Expertos"])
+sections = st.tabs(["General", "Expertos", "Agregar"])
 
 if not app.experts:
-    for key, value in program["experts"].items():
+    for key, value in program[phase]["experts"].items():
         for i in range(value["number"]):
             app.experts[f"{value['name']} {i+1}"] = Expert(role=key, 
-                                                           evaluation=Evaluation(coeficent=program["project_types"][app.project_type][key]))
+                                                           evaluation=Evaluation(coeficent=program[phase]["project_types"][app.project_type][key]))
     app.save()
 
 
@@ -127,9 +130,33 @@ def move_app(app: Application):
         app.save()
     
     st.info(f"Usted va a mover la aplicación {app.title} al programa {value}", icon="ℹ️")
-    st.button("Mover", on_click=move_app, args=[app, value])    
+    st.button("Mover", on_click=move_app, args=[app, value])  
+    
+def final_review(app: Application):
+    "Revisión final del proyecto"
+    
+    value = st.selectbox("Dictamen", ["Aceptar", "Rechazar"])
 
-actions = { func.__doc__: func for func in [review_docs, move_app]}
+    def final_review(app, value):
+        if value == "Aceptar":
+            app.phase = Phase.execution
+            app.project_type = "Certificación"
+            app.experts = {}
+        else:
+            app.phase = Phase.announcement
+
+        app.save()
+
+    st.button("Aplicar dictamen", on_click=final_review, args=(app, value))
+
+dict_actions = {
+    "final_review": final_review,
+    "move_app": move_app,
+    "review_docs": review_docs
+}
+
+current_actions = program[phase]["actions"]
+actions = { func[1].__doc__: func[1] for func in dict_actions.items() if func[0] in current_actions}
 
 def delete_application():
     app.destroy()
@@ -143,6 +170,7 @@ with sections[0]:
         st.write("#### Acciones")
         action = st.selectbox("Seleccione una opción", actions)
         actions[action](app)
+    
     with st.expander("🔴 BORRAR APLICACIÓN"):
         st.warning(f"⚠️ La acción siguiente es permanente, todos los datos de la aplicación **{app.title}** se perderán.")
 
@@ -160,6 +188,7 @@ def assign_expert(app: Application, name: str, role: str, struct):
     
     def assign_expert(app: Application, value, role):
         app.experts[name].username = expert
+        app.experts[name].phase = phase
         
         send_from_template("expert_notify", expert, 
                            user=experts[expert],
@@ -178,11 +207,28 @@ def unassign_expert(app: Application, name: str):
     
     app.experts[name].reset()
     app.save()
-
-with sections[1]:    
-    st.write(f"#### Evaluación de los expertos")
     
-    anexo = config["programs"][app.program]["project_types"][app.project_type]["doc"]
+def add_role(role: str, name: str, email: str):
+    "Agregar rol"
+    
+    roles[st.session_state.program][role][email] = name
+    with open("/src/data/roles.yml", "w") as role_file:
+        yaml.safe_dump(jsonable_encoder(roles), roles_file)
+    
+def del_role(role: str, email: str):
+    "Borrar rol"
+    
+    del roles[st.session_state.program][role][email]
+    with open("/src/data/roles.yml", "w") as roles_file:
+        yaml.safe_dump(jsonable_encoder(roles), role_file)
+        
+def add_project(title: str, owner: str):
+    pass
+    
+
+with sections[1]:
+    st.write(f"#### Evaluación de los expertos")
+    anexo = config["programs"][app.program][app.phase.value]["project_types"][app.project_type]["doc"]
     name = config["docs"][anexo]["name"]
     file_name = config["docs"][anexo]["file_name"]
 
@@ -212,6 +258,34 @@ with sections[1]:
                 
             email_form(tab, "program", exp.username, f"expert_{i}",
                        program=st.session_state.program, 
-                       user=roles["Dirección de Programa"][st.session_state.user])
+                       user=roles[st.session_state.program]["Dirección de Programa"][st.session_state.user])
                     
             tab.button(label="⛔ Quitar asignación", on_click=unassign_expert, args=[app, evaluators[i]], key=f"u_expert{i}_{app.uuid}")
+    
+with sections[2]:
+    st.write("#### Agregar experto")
+    email = st.text_input("Correo")
+    name = st.text_input("Nombre")
+    if email and name:
+        if st.button("Agregar", on_click=add_role, args=("Experto", name, email)):
+            st.success("Experto agregado satisfactoriamente")
+            
+    st.write("#### Agregar proyecto")
+    app_title = st.text_input("Título")
+    app_owner = st.text_input("Correo del titular")
+    app_phase = st.selectbox("Fase", ["Convocatoria", "Ejecución"])
+    app_project_type = None
+    if app_phase:
+        app_project_type = st.selectbox("Tipo de proyecto", list(program[app_phase]["project_types"].keys()))
+    if app_title and app_project_type and app_owner:
+        insert = st.button("Crear")
+        if insert:
+            Application(title = app_title, 
+                        project_type = app_project_type, 
+                        program = st.session_state.program, 
+                        owner = app_owner,
+                        path = program["path"],
+                        phase = Phase.announcement if app_phase == "Convocatoria" else Phase.execution).create()
+            st.success("**🥳 Aplicación agregada satisfactoriamente**")
+    else:
+        st.warning("⚠️ Faltan datos por instertar")

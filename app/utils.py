@@ -1,9 +1,9 @@
 import streamlit as st
-from models import Application, Status
+from models import Application, Status, Phase
 from yaml import safe_load
+import datetime
 
 config = safe_load(open("/src/data/config.yml"))
-
 
 def replace_file(app, file_name, buffer):
     with app.file(file_name, "wb") as fp:
@@ -22,11 +22,10 @@ def show_app_state(app, expert=False):
     if app.moved:
         st.info(f"Esta aplicación viene del programa {app.moved}", icon="ℹ️")
     left, right = st.columns(2)
-
     with right:
         st.write(f"#### Documentación de la aplicación")
         st.download_button("📦 Descargarla toda", app.zip_file(), file_name=f"{app.title}.zip", help="Descarga un comprimido con todos los archivos del proyecto")
-        for key in config["programs"][app.program]["docs"].keys():
+        for key in config["programs"][app.program][app.phase.value]["docs"].keys():
             name = config["docs"][key]["name"]
             file_name = config["docs"][key]["file_name"]
             
@@ -56,7 +55,7 @@ def show_app_state(app, expert=False):
             program = config['programs'][st.session_state.program]
 
             new_title = st.text_input("Nuevo título", value=app.title)
-            new_type = st.selectbox("Tipo de proyecto", program['project_types'], index=list(program['project_types']).index(app.project_type))
+            new_type = st.selectbox("Tipo de proyecto", program[app.phase.value]['project_types'], index=list(program[app.phase.value]['project_types']).index(app.project_type))
 
             st.button("💾 Modificar", on_click=update_app, args=(app, new_title, new_type))
 
