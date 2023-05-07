@@ -63,10 +63,13 @@ programs:
     Ejecución:
       docs:
         informe: 
-          download: True
+          download: False
           upload: True
         avalCCert:
-          download: True
+          download: False
+          upload: True
+        planResultados:
+          download: False
           upload: True
       experts:
         regular:
@@ -230,6 +233,10 @@ programs:
         - move_app
         - review_docs
         - final_review
+      dir_program:
+        docs:
+          - anexo19
+          - anexo16
     Ejecución:
       docs:
         informe: 
@@ -276,6 +283,10 @@ docs:
     name: AvalCC de Certificación
     extension: pdf
     file_name: AvalCCert.pdf
+  planResultados:
+    name: Plan de Resultados
+    extension: pdf
+    file_name: PlanResultados.pdf
   carta:
     name: Carta del Decano o Director
     extension: pdf
