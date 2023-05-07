@@ -61,7 +61,8 @@ with right:
     value = st.number_input(label="Evaluación Final", 
                             max_value=config["programs"][st.session_state.program]["announcement"]["project_types"][app.project_type]["max_value"], 
                             min_value=0, 
-                            step=5)
+                            step=5,
+                            disabled=app.phase.value != "Convocatoria")
     for role, expert in app.experts.items():
         if st.session_state.user == expert.username:
             expert.evaluation.review = Status.accept

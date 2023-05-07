@@ -80,7 +80,7 @@ app: Application = applications[st.selectbox("Seleccione una aplicación", appli
 if app is None:
     st.stop()
 
-sections = st.tabs(["General", "Expertos", "Agregar"])
+sections = st.tabs(["General", "Expertos", "Gestión"])
 
 if not app.experts:
     for key, value in program[phase]["experts"].items():
@@ -88,7 +88,7 @@ if not app.experts:
             app.experts[f"{value['name']} {i+1}"] = Expert(role=key, 
                                                            evaluation=Evaluation(coeficent=program[phase]["project_types"][app.project_type][key]))
     app.save()
-
+     
 
 def email_form(struct, template, to_email, key, **kwargs):
     with struct.expander("📧 Enviar correo"):
@@ -149,6 +149,40 @@ def final_review(app: Application):
 
     st.button("Aplicar dictamen", on_click=final_review, args=(app, value))
 
+# TODO
+def emit_anexo(app: Application):
+    "Emitir anexos de evaluación"
+    
+    st.write("#### Evaluación")
+    for anexo in config["programs"][app.program][app.phase.value]["project_types"]["dir_program"]["docs"]:
+        name = config["docs"][anexo]["name"]
+        file_name = config["docs"][anexo]["file_name"]
+        extension = config["docs"][anexo]["extension"]
+        uploaded = st.file_uploader(
+            f"Subir {name}",
+            extension,
+            key=f"upload_{anexo}_{app.uuid}"
+        )
+
+        last_version = app.file(file_name, expert=st.session_state.user)
+        if last_version:
+            st.download_button(
+            f"⏬ Descargar última versión", last_version.read(), file_name=file_name, 
+            key=f"download1_{anexo}_{app.uuid}"
+        )
+        else:
+            st.download_button(
+            f"⏬ Descargar plantilla del {name}", open(f"{st.session_state.path}/docs/{file_name}", "rb").read(), file_name=file_name,
+            key=f"download2_{anexo}_{app.uuid}"
+        )
+            
+        if uploaded:
+            app.save_expert_eval(expert=st.session_state.user, 
+                                file_name=anexo,
+                                doc=uploaded,
+                                extension=extension)
+            st.success("Evaluación guardada satisfactoriamente", icon="✅")
+
 dict_actions = {
     "final_review": final_review,
     "move_app": move_app,
@@ -208,22 +242,68 @@ def unassign_expert(app: Application, name: str):
     app.experts[name].reset()
     app.save()
     
-def add_role(role: str, name: str, email: str):
-    "Agregar rol"
+def add_user():
+    "Agregar usuario"
     
-    roles[st.session_state.program][role][email] = name
-    with open("/src/data/roles.yml", "w") as role_file:
-        yaml.safe_dump(jsonable_encoder(roles), roles_file)
+    def add_user(role, name, email):
+        roles[st.session_state.program][value][email] = name
+        with open("/src/data/roles.yml", "w") as role_file:
+            yaml.safe_dump(jsonable_encoder(roles), role_file)
+        st.success(f"✅ {value} agregado correctamente")
     
-def del_role(role: str, email: str):
-    "Borrar rol"
+    value = st.selectbox("Rol", list(roles[st.session_state.program].keys()))
+    email = st.text_input("Correo")
+    name = st.text_input("Nombre")
+    button = st.button("Agregar", on_click=add_user, args=(value, name, email), disabled=not (email and name and value))
+
+def del_user():
+    "Borrar usuario"
     
-    del roles[st.session_state.program][role][email]
-    with open("/src/data/roles.yml", "w") as roles_file:
-        yaml.safe_dump(jsonable_encoder(roles), role_file)
-        
-def add_project(title: str, owner: str):
-    pass
+    role = st.selectbox("Rol", [""]+list(roles[st.session_state.program].keys()), key=f"role{st.session_state.user}")
+    value = st.selectbox(label="Usuario", options=[f"{name} ({email})" for email, name in 
+                                                    roles[st.session_state.program][role].items()] if role else [],
+                            key=f"email{st.session_state.user}")
+    email = value.split("(")[-1][:-1] if value else ""
+    
+    def del_user(email):
+        del roles[st.session_state.program][role][email]
+        with open("/src/data/roles.yml", "w") as roles_file:
+            yaml.safe_dump(jsonable_encoder(roles), roles_file)
+        st.success(f"✅ {email} eliminado correctamente")
+    
+    button = st.button("Borrar", on_click=del_user, args=(email,), disabled=not (role and value))
+
+def add_project():
+    "Agregar proyecto"
+    
+    def add_project(title, owner, phase, project_type):
+        app = Application(title = title, 
+                        project_type = project_type, 
+                        program = st.session_state.program, 
+                        owner = owner,
+                        path = program["path"],
+                        phase = Phase.announcement if phase == "Convocatoria" else Phase.execution)
+        app.create()
+        app.save()
+        st.success(f"✅ {title} agregado correctamente")
+    
+    title = st.text_input(label="Título",
+                          key=f"title{st.session_state.program}")
+    owner = st.text_input(label="Correo del titular",
+                          key=f"owner{st.session_state.program}")
+    phase = st.selectbox(label="Fase", 
+                         options=["Convocatoria", "Ejecución"],
+                         index=1,
+                         key=f"phase{st.session_state.program}")
+    project_type = st.selectbox(label="Tipo de proyecto", 
+                                options=list(program[phase]["project_types"].keys()), 
+                                disabled=not phase, 
+                                key=f"project-type{st.session_state.program}")
+    button = st.button(label="Agregar", 
+                       on_click=add_project, 
+                       args=(title, owner, phase, project_type), 
+                       disabled=not (title and owner and phase and project_type),
+                       key=f"add-project{st.session_state.program}")
     
 
 with sections[1]:
@@ -262,30 +342,10 @@ with sections[1]:
                     
             tab.button(label="⛔ Quitar asignación", on_click=unassign_expert, args=[app, evaluators[i]], key=f"u_expert{i}_{app.uuid}")
     
+manage = {func.__doc__: func for func in [add_user, del_user, add_project]}    
+
 with sections[2]:
-    st.write("#### Agregar experto")
-    email = st.text_input("Correo")
-    name = st.text_input("Nombre")
-    if email and name:
-        if st.button("Agregar", on_click=add_role, args=("Experto", name, email)):
-            st.success("Experto agregado satisfactoriamente")
-            
-    st.write("#### Agregar proyecto")
-    app_title = st.text_input("Título")
-    app_owner = st.text_input("Correo del titular")
-    app_phase = st.selectbox("Fase", ["Convocatoria", "Ejecución"])
-    app_project_type = None
-    if app_phase:
-        app_project_type = st.selectbox("Tipo de proyecto", list(program[app_phase]["project_types"].keys()))
-    if app_title and app_project_type and app_owner:
-        insert = st.button("Crear")
-        if insert:
-            Application(title = app_title, 
-                        project_type = app_project_type, 
-                        program = st.session_state.program, 
-                        owner = app_owner,
-                        path = program["path"],
-                        phase = Phase.announcement if app_phase == "Convocatoria" else Phase.execution).create()
-            st.success("**🥳 Aplicación agregada satisfactoriamente**")
-    else:
-        st.warning("⚠️ Faltan datos por instertar")
+    st.info("Se recomienda actualizar la página luego de hacer algún cambio", icon="ℹ️")
+    option = st.selectbox("Seleccione una opción", list(manage.keys()), key="manage")
+    st.write(f"#### {option}")
+    manage[option]()
