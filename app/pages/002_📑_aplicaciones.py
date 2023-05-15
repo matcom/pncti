@@ -20,11 +20,10 @@ if st.session_state.role != "Dirección de Proyecto":
 applications = Application.load_from(program=st.session_state.program, user=st.session_state.user)
 st.info(f"Usted tiene **{len(applications)}** aplicaciones enviadas.")
 
+if not applications:
+    st.stop()
 app: Application = applications[st.selectbox("Seleccione una aplicación", [item[0] for item in sorted(applications.items(), key=lambda x: x[1].accepted, reverse=True)])]
 app.save()
-
-if not app:
-    st.stop()
 
 show_app_state(app)
 

@@ -66,6 +66,8 @@ class Application(BaseModel):
     experts: Dict[str, Expert] = {}
     
     phase: Phase = Phase.announcement
+    institution: str = "No definida"
+    code: str = "No definido"
 
     def __eq__(self, __o: object) -> bool:
         return isinstance(__o, Application) and self.uuid == __o.uuid

@@ -38,11 +38,13 @@ if not applications:
     st.stop()
     
 for i, app in enumerate(applications.values()):
-    exp_table = {key:f"{experts[value.username]} ({value.evaluation.final_score})" if value.username in experts.keys() else "" 
+    exp_table = {key:f"{experts[value.username]} {'('+str(value.evaluation.final_score)+')' if phase != 'Ejecución' else ''}" 
+            if value.username in experts.keys() else "" 
                  for key,value in app.experts.items()}
     exp_scores = {key:f"{value.evaluation.final_score}" if value.username in experts.keys() else "" 
                  for key,value in app.experts.items()}
-    exp_table["Total"] = sum([value.evaluation.coeficent * value.evaluation.final_score for key, value in app.experts.items()])
+    if phase != "Ejecución":
+        exp_table["Total"] = sum([value.evaluation.coeficent * value.evaluation.final_score for key, value in app.experts.items()])
     df.append(
         dict(
             No=i+1,
@@ -276,36 +278,42 @@ def del_user():
 def add_project():
     "Agregar proyecto"
     
-    def add_project(title, owner, phase, project_type):
+    def add_project(title, owner, phase, project_type, institution, code):
         app = Application(title = title, 
                         project_type = project_type, 
                         program = st.session_state.program, 
                         owner = owner,
+                        institution = institution,
+                        code = code,
                         path = program["path"],
                         phase = Phase.announcement if phase == "Convocatoria" else Phase.execution)
         app.create()
         app.save()
         st.success(f"✅ {title} agregado correctamente")
     
-    title = st.text_input(label="Título",
+    title = st.text_input(label="Nombre del proyecto",
                           key=f"title{st.session_state.program}")
-    owner = st.text_input(label="Correo del titular",
-                          key=f"owner{st.session_state.program}")
     phase = st.selectbox(label="Fase", 
                          options=["Convocatoria", "Ejecución"],
                          index=1,
                          key=f"phase{st.session_state.program}")
+    code = st.text_input(label="Código", 
+                         key=f"code{st.session_state.program}", disabled=phase!="Ejecución") or "No definido"
+    owner = st.text_input(label="Correo del Jefe de Proyecto",
+                          key=f"owner{st.session_state.program}")
+    institution = st.text_input(label="Institución",
+                                key=f"institution{st.session_state.program}")
     project_type = st.selectbox(label="Tipo de proyecto", 
                                 options=list(program[phase]["project_types"].keys()), 
                                 disabled=not phase, 
                                 key=f"project-type{st.session_state.program}")
+
     button = st.button(label="Agregar", 
                        on_click=add_project, 
-                       args=(title, owner, phase, project_type), 
-                       disabled=not (title and owner and phase and project_type),
+                       args=(title, owner, phase, project_type, institution, code), 
+                       disabled=not (title and owner and phase and project_type and institution and code),
                        key=f"add-project{st.session_state.program}")
     
-
 with sections[1]:
     st.write(f"#### Evaluación de los expertos")
     anexo = config["programs"][app.program][app.phase.value]["project_types"][app.project_type]["doc"]
@@ -345,7 +353,7 @@ with sections[1]:
 manage = {func.__doc__: func for func in [add_user, del_user, add_project]}    
 
 with sections[2]:
-    st.info("Se recomienda actualizar la página luego de hacer algún cambio", icon="ℹ️")
+    st.info("Recuerde presionar Enter para que se guarden los campos correctamente", icon="ℹ️")
     option = st.selectbox("Seleccione una opción", list(manage.keys()), key="manage")
     st.write(f"#### {option}")
     manage[option]()

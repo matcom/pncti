@@ -60,6 +60,8 @@ programs:
         - move_app
         - review_docs
         - final_review
+      dir_program:
+        docs: []
     Ejecución:
       docs:
         informe: 
@@ -83,6 +85,10 @@ programs:
           max_value: 100
       actions:
         - move_app
+      dir_program:
+        docs:
+          - anexo19
+          - anexo16
 
   PIUH:
     name: PIUH - Proyectos Institucionales UH
@@ -151,6 +157,8 @@ programs:
         - move_app
         - review_docs
         - final_review
+      dir_program:
+        docs: []
     Ejecución:
       docs:
         informe: 
@@ -171,6 +179,10 @@ programs:
           max_value: 100
       actions:
         - move_app
+      dir_program:
+        docs:
+          - anexo19
+          - anexo16
 
   CSH:
     name: CSH - Ciencias Sociales y Humanidades
@@ -234,9 +246,7 @@ programs:
         - review_docs
         - final_review
       dir_program:
-        docs:
-          - anexo19
-          - anexo16
+      docs: []
     Ejecución:
       docs:
         informe: 
@@ -257,6 +267,10 @@ programs:
           max_value: 100
       actions:
         - move_app
+      dir_program:
+        docs:
+          - anexo19
+          - anexo16
 
 docs:
   anexo3:
