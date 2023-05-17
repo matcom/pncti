@@ -3,7 +3,7 @@ import random, datetime
 from yaml import safe_load
 import auth
 
-from models import Application, Status
+from models import Application, Status, Phase
 from utils import show_app_state
 
 
@@ -17,15 +17,18 @@ if st.session_state.role != "Dirección de Proyecto":
     st.warning("⚠️ Esta sección solo está disponible para el rol de **Dirección de Proyecto**.")
     st.stop()
 
-applications = Application.load_from(program=st.session_state.program, user=st.session_state.user)
+phases = [Phase.announcement, Phase.execution]
+phase = st.select_slider("Mostrar proyectos en:", map(lambda x: x.value, phases), value=Phase.execution.value)
+applications = Application.load_from(program=st.session_state.program, user=st.session_state.user, phase=phase)
 st.info(f"Usted tiene **{len(applications)}** aplicaciones enviadas.")
 
 if not applications:
     st.stop()
-app: Application = applications[st.selectbox("Seleccione una aplicación", [item[0] for item in sorted(applications.items(), key=lambda x: x[1].accepted, reverse=True)])]
+app: Application = applications[st.selectbox("Seleccione una aplicación", applications)]
 app.save()
 
 show_app_state(app)
+
 
 def delete_application():
     app.destroy()

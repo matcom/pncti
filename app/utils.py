@@ -55,11 +55,30 @@ def show_app_state(app, expert=False):
         show_docs(app=app, 
                   docs=config["programs"][app.program][app.phase.value]["docs"].keys(), 
                   replaceable=not expert)
+        # Expert docs
+        if app.phase.value == "Ejecución" and st.session_state.role == "Dirección de Proyecto":
+            st.write("**Documentos de los Expertos**")
+            anexo = config["programs"][app.program][app.phase.value]["project_types"][app.project_type]["doc"]
+            name = config["docs"][anexo]["name"]
+            file_name = config["docs"][anexo]["file_name"]
+            for exp in app.experts.values():
+                if not exp.username:
+                    st.warning("No está asignado", icon="⚠️")   
+                else:
+                    st.write(f"Evaluación del experto {exp.username}")
+                    exp_file = app.file(file_name=file_name, expert=exp.username)
+                    if exp_file:
+                        st.download_button(
+                            f"⏬ Descargar última versión subida del {name}", exp_file, file_name=file_name
+                )
+                    else:
+                        st.warning("No hay evaluación de este experto", icon="⚠️")
+
         # Admin docs
+        st.write("**Documentos de la Dirección del Programa**")
         show_docs(app=app, 
                   docs=config["programs"][app.program][app.phase.value]["dir_program"]["docs"],
                   replaceable=st.session_state.role == "Dirección de Programa")
-
     with left:
         if not expert:
             st.write("#### Modificar metadatos")
@@ -69,8 +88,8 @@ def show_app_state(app, expert=False):
             new_title = st.text_input("Nuevo título", value=app.title)
             new_type = st.selectbox("Tipo de proyecto", program[app.phase.value]['project_types'], index=list(program[app.phase.value]['project_types']).index(app.project_type))
             new_institution = st.text_input("Nueva Institución", value=app.institution)
-            new_owner = st.text_input("Correo del Jefe de Proyecto", value=app.owner)
-            new_code = st.text_input("Código del proyecto", value=app.code, disabled=app.phase.value != Phase.execution.value)
+            new_owner = st.text_input("Correo del Jefe de Proyecto", value=app.owner, disabled=st.session_state.role != "Dirección de Programa")
+            new_code = st.text_input("Código del proyecto", value=app.code, disabled=app.phase.value != Phase.execution.value or st.session_state.role != "Dirección de Programa")
             st.button("💾 Modificar", on_click=update_app, args=(app, new_title, new_type, new_institution, new_owner, new_code))
 
             st.write("#### Estado de la aplicación")
