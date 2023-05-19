@@ -87,8 +87,8 @@ programs:
         - move_app
       dir_program:
         docs:
-          - anexo19
           - anexo16
+          - anexo19
 
   PIUH:
     name: PIUH - Proyectos Institucionales UH
@@ -181,8 +181,8 @@ programs:
         - move_app
       dir_program:
         docs:
-          - anexo19
           - anexo16
+          - anexo19
 
   CSH:
     name: CSH - Ciencias Sociales y Humanidades
@@ -269,8 +269,8 @@ programs:
         - move_app
       dir_program:
         docs:
-          - anexo19
           - anexo16
+          - anexo19
 
 docs:
   anexo3:

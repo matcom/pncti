@@ -37,7 +37,7 @@ if not applications:
     )
     st.stop()
     
-for i, app in enumerate(applications.values()):
+for i, app in enumerate(sorted(applications.values(), key=lambda x: x.code)):
     exp_table = {key:f"{experts[value.username]} {'('+str(value.evaluation.final_score)+')' if phase != 'Ejecución' else ''}" 
             if value.username in experts.keys() else "" 
                  for key,value in app.experts.items()}
@@ -47,7 +47,7 @@ for i, app in enumerate(applications.values()):
         exp_table["Total"] = sum([value.evaluation.coeficent * value.evaluation.final_score for key, value in app.experts.items()])
     df.append(
         dict(
-            No=i+1,
+            No=i+1 if phase != 'Ejecución' else app.code,
             Título=app.title,
             Tipo=app.project_type,
             Jefe=app.owner,
@@ -56,7 +56,7 @@ for i, app in enumerate(applications.values()):
     )
     exp_df.append(
         dict(
-            No=i+1,
+            No=i+1 if phase != 'Ejecución' else app.code,
             Título=app.title,
             Tipo=app.project_type,
             Jefe=app.owner,
@@ -133,7 +133,7 @@ def move_app(app: Application):
     
     st.info(f"Usted va a mover la aplicación {app.title} al programa {value}", icon="ℹ️")
     st.button("Mover", on_click=move_app, args=[app, value])  
-    
+
 def final_review(app: Application):
     "Revisión final del proyecto"
     
@@ -150,40 +150,6 @@ def final_review(app: Application):
         app.save()
 
     st.button("Aplicar dictamen", on_click=final_review, args=(app, value))
-
-# TODO
-def emit_anexo(app: Application):
-    "Emitir anexos de evaluación"
-    
-    st.write("#### Evaluación")
-    for anexo in config["programs"][app.program][app.phase.value]["project_types"]["dir_program"]["docs"]:
-        name = config["docs"][anexo]["name"]
-        file_name = config["docs"][anexo]["file_name"]
-        extension = config["docs"][anexo]["extension"]
-        uploaded = st.file_uploader(
-            f"Subir {name}",
-            extension,
-            key=f"upload_{anexo}_{app.uuid}"
-        )
-
-        last_version = app.file(file_name, expert=st.session_state.user)
-        if last_version:
-            st.download_button(
-            f"⏬ Descargar última versión", last_version.read(), file_name=file_name, 
-            key=f"download1_{anexo}_{app.uuid}"
-        )
-        else:
-            st.download_button(
-            f"⏬ Descargar plantilla del {name}", open(f"{st.session_state.path}/docs/{file_name}", "rb").read(), file_name=file_name,
-            key=f"download2_{anexo}_{app.uuid}"
-        )
-            
-        if uploaded:
-            app.save_expert_eval(expert=st.session_state.user, 
-                                file_name=anexo,
-                                doc=uploaded,
-                                extension=extension)
-            st.success("Evaluación guardada satisfactoriamente", icon="✅")
 
 dict_actions = {
     "final_review": final_review,
