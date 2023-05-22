@@ -56,7 +56,8 @@ def show_app_state(app, expert=False):
                   docs=config["programs"][app.program][app.phase.value]["docs"].keys(), 
                   replaceable=not expert)
         # Expert docs
-        if app.phase.value == "Ejecución" and st.session_state.role == "Dirección de Proyecto":
+        if (app.phase.value == "Ejecución" and 
+            (st.session_state.role == "Dirección de Proyecto" or st.session_state.role == "Dirección de Programa")):
             st.write("**Documentos de los Expertos**")
             anexo = config["programs"][app.program][app.phase.value]["project_types"][app.project_type]["doc"]
             name = config["docs"][anexo]["name"]
@@ -69,16 +70,16 @@ def show_app_state(app, expert=False):
                     exp_file = app.file(file_name=file_name, expert=exp.username)
                     if exp_file:
                         st.download_button(
-                            f"⏬ Descargar última versión subida del {name}", exp_file, file_name=file_name
-                )
+                            f"⏬ Descargar última versión subida del {name}", exp_file, file_name=file_name)
                     else:
                         st.warning("No hay evaluación de este experto", icon="⚠️")
 
         # Admin docs
-        st.write("**Documentos de la Dirección del Programa**")
-        show_docs(app=app, 
-                  docs=config["programs"][app.program][app.phase.value]["dir_program"]["docs"],
-                  replaceable=st.session_state.role == "Dirección de Programa")
+        if (app.phase.value == "Ejecución"):
+            st.write("**Documentos de la Dirección del Programa**")
+            show_docs(app=app, 
+                    docs=config["programs"][app.program][app.phase.value]["dir_program"]["docs"],
+                    replaceable=st.session_state.role == "Dirección de Programa")
     with left:
         if not expert:
             st.write("#### Modificar metadatos")
