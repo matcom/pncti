@@ -285,7 +285,7 @@ with sections[1]:
     anexo = config["programs"][app.program][app.phase.value]["project_types"][app.project_type]["doc"]
     name = config["docs"][anexo]["name"]
     file_name = config["docs"][anexo]["file_name"]
-
+    extension = config["docs"][anexo]["extension"]
     evaluators = list(app.experts.keys())
     tabs = st.tabs(evaluators)
     
@@ -302,10 +302,22 @@ with sections[1]:
             exp_file = app.file(file_name=file_name, expert=exp.username)
             if exp_file:
                 tab.download_button(
-                    f"⏬ Descargar última versión subida del {name}", exp_file, file_name=file_name
+                    f"⏬ Descargar última versión subida del {name}", exp_file, file_name=file_name, key=f"down{anexo}{exp.username}"
                 )
             else:
                 tab.warning("No hay evaluación de este experto", icon="⚠️")
+                
+            uploaded = tab.file_uploader(
+                            f"Subir {name}",
+                            extension,
+                            key=f"up{anexo}{exp.username}"
+                        )
+            if uploaded:
+                app.save_expert_eval(expert=exp.username, 
+                                    file_name=anexo,
+                                    doc=uploaded,
+                                    extension=extension)
+                st.success("Evaluación guardada satisfactoriamente", icon="✅")
             
             if exp.notify:
                 tab.info("El experto fue notificado", icon="ℹ️")
