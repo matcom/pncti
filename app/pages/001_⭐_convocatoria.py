@@ -77,8 +77,8 @@ args = [title, project_type]
 
 for key, value in announcement['docs'].items():
     name = config['docs'][key]['name']
-    extension = config['docs'][key]['extension']
-    file_name = config['docs'][key]['file_name']
+    extension = config['docs'][key]["download"]['extension']
+    file_name = config['docs'][key]["download"]['file_name']
 
     st.write(f"### {name}")
     left, right = st.columns(2)

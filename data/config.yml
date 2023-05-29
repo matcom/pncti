@@ -275,60 +275,116 @@ programs:
 docs:
   anexo3:
     name: Anexo 3
-    extension: docx
-    file_name: Anexo3.docx
+    download:
+      extension: docx
+      file_name: Anexo3.docx
+    upload:
+      extension: docx
+      file_name: Anexo3.docx
   avalCC:
     name: Aval del Consejo Científico
-    extension: pdf
-    file_name: Avalcc.pdf
+    download:
+      extension: pdf
+      file_name: Avalcc.pdf
+    upload:
+      extension: pdf
+      file_name: Avalcc.pdf
   presupuesto:
     name: Presupuesto
-    extension: xlsx
-    file_name: Presupuesto.xlsx
+    download:
+      extension: xlsx
+      file_name: Presupuesto.xlsx
+    upload:
+      extension: xlsx
+      file_name: Presupuesto.xlsx
   cv:
     name: CV del Jefe del Proyecto
-    extension: pdf
-    file_name: Cv.pdf
+    download:
+      extension: pdf
+      file_name: Cv.pdf
+    upload:
+      extension: pdf
+      file_name: Cv.pdf
   informe:
     name: Informe
-    extension: pdf
-    file_name: Informe.pdf
+    download:
+      extension: pdf
+      file_name: Informe.pdf
+    upload:
+      extension: pdf
+      file_name: Informe.pdf
   avalCCert:
     name: AvalCC de Certificación
-    extension: pdf
-    file_name: AvalCCert.pdf
+    download:
+      extension: pdf
+      file_name: AvalCCert.pdf
+    upload:
+      extension: pdf
+      file_name: AvalCCert.pdf
   planResultados:
     name: Plan de Resultados
-    extension: pdf
-    file_name: PlanResultados.pdf
+    download:
+      extension: pdf
+      file_name: PlanResultados.pdf
+    upload:
+      extension: pdf
+      file_name: PlanResultados.pdf
   carta:
     name: Carta del Decano o Director
-    extension: pdf
-    file_name: Carta.pdf
+    download:
+      extension: pdf
+      file_name: Carta.pdf
+    upload:
+      extension: pdf
+      file_name: Carta.pdf
   anexo4:
     name: Anexo 4
-    extension: xlsx
-    file_name: Anexo4.xlsx
+    download:
+      extension: xlsx
+      file_name: Anexo4.xlsx
+    upload:
+      extension: xlsx
+      file_name: Anexo4.xlsx
   anexo5:
     name: Anexo 5
-    extension: xlsx
-    file_name: Anexo5.xlsx
+    download:
+      extension: xlsx
+      file_name: Anexo5.xlsx
+    upload:
+      extension: xlsx
+      file_name: Anexo5.xlsx
   anexo6:
     name: Anexo 6
-    extension: xlsx
-    file_name: Anexo6.xlsx
+    download:
+      extension: xlsx
+      file_name: Anexo6.xlsx
+    upload:
+      extension: xlsx
+      file_name: Anexo6.xlsx
   anexo16:
     name: Anexo 16
-    extension: xlsx
-    file_name: Anexo16.xlsx
+    download:
+      extension: docx
+      file_name: Anexo16.docx
+    upload:
+      extension: pdf
+      file_name: Anexo16.pdf
   anexo18:
     name: Anexo 18
-    extension: xlsx
-    file_name: Anexo18.xlsx
+    download:
+      extension: docx
+      file_name: Anexo18.docx
+    upload:
+      extension: pdf
+      file_name: Anexo18.pdf
   anexo19:
     name: Anexo 19
-    extension: xlsx
-    file_name: Anexo19.xlsx
+    download:
+      extension: docx
+      file_name: Anexo19.docx
+    upload:
+      extension: pdf
+      file_name: Anexo19.pdf
   
 
 roles:

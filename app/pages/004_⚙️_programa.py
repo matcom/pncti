@@ -33,7 +33,7 @@ program = config["programs"][st.session_state.program]
 
 if not applications:
     st.warning(
-        "⚠️ No hay aplicaciones registradas en esta fase."
+        "⚠️ No hay proyectos registrados en esta fase."
     )
     st.stop()
     
@@ -66,7 +66,7 @@ for i, app in enumerate(sorted(applications.values(), key=lambda x: x.code)):
 df = pd.DataFrame(df).set_index("No")
 exp_df = pd.DataFrame(exp_df).set_index("No")
 
-with st.expander(f"Listado de aplicaciones ({len(df)})"):
+with st.expander(f"Listado de proyectos ({len(df)})"):
     st.table(df)
     df.to_excel(f"{st.session_state.path}/Aplicaciones.xlsx")
     exp_df.to_excel(f"{st.session_state.path}/Puntuaciones.xlsx")
@@ -77,7 +77,7 @@ with st.expander(f"Listado de aplicaciones ({len(df)})"):
                        data=open(f"{st.session_state.path}/Puntuaciones.xlsx", "rb"),
                        file_name="Puntuaciones.xlsx")
 
-app: Application = applications[st.selectbox("Seleccione una aplicación", applications)]
+app: Application = applications[st.selectbox("Seleccione un proyecto", applications)]
 
 if app is None:
     st.stop()
@@ -122,7 +122,7 @@ def review_docs(app: Application):
                program=app.program)
     
 def move_app(app: Application):
-    "Mover aplicación a otro programa"
+    "Mover proyecto a otro programa"
     
     value = st.selectbox("Programa", [prog for prog in config["programs"] if prog != app.program])
     
@@ -131,7 +131,7 @@ def move_app(app: Application):
         app.move(old_program=app.program, new_program=value, new_path=new_path)
         app.save()
     
-    st.info(f"Usted va a mover la aplicación {app.title} al programa {value}", icon="ℹ️")
+    st.info(f"Usted va a mover el proyecto {app.title} al programa {value}", icon="ℹ️")
     st.button("Mover", on_click=move_app, args=[app, value])  
 
 def final_review(app: Application):
@@ -163,7 +163,7 @@ actions = { func[1].__doc__: func[1] for func in dict_actions.items() if func[0]
 def delete_application():
     app.destroy()
     st.session_state['delete-app'] = False
-    st.warning(f"⚠️ Aplicación **{app.title}** eliminada satisfactoriamente.")
+    st.warning(f"⚠️ Proyecto **{app.title}** eliminada satisfactoriamente.")
 
 with sections[0]:
     left, right = show_app_state(app, expert=False)
@@ -173,11 +173,11 @@ with sections[0]:
         action = st.selectbox("Seleccione una opción", actions)
         actions[action](app)
     
-    with st.expander("🔴 BORRAR APLICACIÓN"):
-        st.warning(f"⚠️ La acción siguiente es permanente, todos los datos de la aplicación **{app.title}** se perderán.")
+    with st.expander("🔴 BORRAR PROYECTO"):
+        st.warning(f"⚠️ La acción siguiente es permanente, todos los datos del proyecto **{app.title}** se perderán.")
 
-        if st.checkbox(f"Soy conciente de que perderé todos los datos de la aplicación **{app.title}**.", key="delete-app"):
-            st.button("🔴 Eliminar Aplicación", on_click=delete_application)
+        if st.checkbox(f"Soy conciente de que perderé todos los datos del proyecto **{app.title}**.", key="delete-app"):
+            st.button("🔴 Eliminar Proyecto", on_click=delete_application)
 
 def assign_expert(app: Application, name: str, role: str, struct):
     "Asignar experto"
@@ -284,8 +284,8 @@ with sections[1]:
     st.write(f"#### Evaluación de los expertos")
     anexo = config["programs"][app.program][app.phase.value]["project_types"][app.project_type]["doc"]
     name = config["docs"][anexo]["name"]
-    file_name = config["docs"][anexo]["file_name"]
-    extension = config["docs"][anexo]["extension"]
+    file_name_u = config["docs"][key]["upload"]["file_name"]
+    extension_u = config["docs"][key]["upload"]["extension"]
     evaluators = list(app.experts.keys())
     tabs = st.tabs(evaluators)
     
@@ -299,24 +299,24 @@ with sections[1]:
         else:
             tab.write(f"**Nombre:** {experts[exp.username]} ({count})")
         
-            exp_file = app.file(file_name=file_name, expert=exp.username)
+            exp_file = app.file(file_name=file_name_u, expert=exp.username)
             if exp_file:
                 tab.download_button(
-                    f"⏬ Descargar última versión subida del {name}", exp_file, file_name=file_name, key=f"down{anexo}{exp.username}"
+                    f"⏬ Descargar última versión subida del {name}", exp_file, file_name=file_name_u, key=f"down{anexo}{exp.username}"
                 )
             else:
                 tab.warning("No hay evaluación de este experto", icon="⚠️")
                 
             uploaded = tab.file_uploader(
                             f"Subir {name}",
-                            extension,
+                            extension_u,
                             key=f"up{anexo}{exp.username}"
                         )
             if uploaded:
                 app.save_expert_eval(expert=exp.username, 
                                     file_name=anexo,
                                     doc=uploaded,
-                                    extension=extension)
+                                    extension=extension_u)
                 st.success("Evaluación guardada satisfactoriamente", icon="✅")
             
             if exp.notify:
