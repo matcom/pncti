@@ -23,22 +23,23 @@ def update_app(app, title, type, institution, owner, code):
 def show_docs(app: Application, docs: list, replaceable: bool = True):
     for key in (docs):
         name = config["docs"][key]["name"]
-        file_name = config["docs"][key]["file_name"]
+        file_name_u = config["docs"][key]["upload"]["file_name"]
+        extension_u = config["docs"][key]["upload"]["extension"]
         
-        exist =  app.file(file_name)
+        exist =  app.file(file_name_u)
         if replaceable:
             uploaded = st.file_uploader(
                 f"Reemplazar {name}" if exist else f"Subir {name}",
-                config["docs"][key]["extension"],
+                extension_u,
                 key=key,
             )
 
             if uploaded:
-                st.button("💾 Reemplazar", on_click=replace_file, args=(app, file_name, uploaded.getbuffer()), key=f"{key}_replace")
+                st.button("💾 Reemplazar", on_click=replace_file, args=(app, file_name_u, uploaded.getbuffer()), key=f"{key}_replace")
         
         if exist:
             st.download_button(
-                f"📄 Descargar {name}", app.file(file_name).read(), file_name
+                f"📄 Descargar {name}", app.file(file_name_u).read(), file_name_u
             )
         else:
             st.warning(f"No se ha subido el {name}", icon="⚠️")
@@ -61,16 +62,16 @@ def show_app_state(app, expert=False):
             st.write("**Documentos de los Expertos**")
             anexo = config["programs"][app.program][app.phase.value]["project_types"][app.project_type]["doc"]
             name = config["docs"][anexo]["name"]
-            file_name = config["docs"][anexo]["file_name"]
+            file_name_u = config["docs"][anexo]["upload"]["file_name"]
             for exp in app.experts.values():
                 if not exp.username:
                     st.warning("No está asignado", icon="⚠️")   
                 else:
                     st.write(f"Evaluación del experto {exp.username}")
-                    exp_file = app.file(file_name=file_name, expert=exp.username)
+                    exp_file = app.file(file_name=file_name_u, expert=exp.username)
                     if exp_file:
                         st.download_button(
-                            f"⏬ Descargar última versión subida del {name}", exp_file, file_name=file_name)
+                            f"⏬ Descargar última versión subida del {name}", exp_file, file_name=file_name_u)
                     else:
                         st.warning("No hay evaluación de este experto", icon="⚠️")
 
