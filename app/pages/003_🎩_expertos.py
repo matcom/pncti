@@ -15,11 +15,9 @@ if st.session_state.role != "Experto":
     st.warning("⚠️ Esta sección solo está disponible para el rol de **Experto**.")
     st.stop()
 
-applications = Application.load_from(program=st.session_state.program, user=st.session_state.user, expert=True)
-
 phases = [Phase.announcement, Phase.execution]
 phase = st.select_slider("Mostrar proyectos en:", map(lambda x: x.value, phases), value=Phase.execution.value)
-applications = Application.load_from(program=st.session_state.program, user=st.session_state.user, phase=phase)
+applications = Application.load_from(program=st.session_state.program, user=st.session_state.user, phase=phase, expert=True)
 
 st.info(f"Usted tiene **{len(applications)}** proyectos asignados.")
 
