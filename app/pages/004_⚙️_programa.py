@@ -284,8 +284,8 @@ with sections[1]:
     st.write(f"#### Evaluación de los expertos")
     anexo = config["programs"][app.program][app.phase.value]["project_types"][app.project_type]["doc"]
     name = config["docs"][anexo]["name"]
-    file_name_u = config["docs"][key]["upload"]["file_name"]
-    extension_u = config["docs"][key]["upload"]["extension"]
+    file_name_u = config["docs"][anexo]["upload"]["file_name"]
+    extension_u = config["docs"][anexo]["upload"]["extension"]
     evaluators = list(app.experts.keys())
     tabs = st.tabs(evaluators)
     
