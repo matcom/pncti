@@ -143,7 +143,7 @@ class Application(BaseModel):
             fp.write(doc.getbuffer())
 
     @classmethod
-    def _load_from(cls, program, phase, user=None, expert=False):
+    def _load_from(cls, program: str, phase: str, user: str=None, expert: bool=False):
         for file in Path(f"/src/data/programs/{program.lower()}/applications").glob("*.yml"):
             app = Application(**safe_load(file.open()))
 
@@ -155,7 +155,7 @@ class Application(BaseModel):
                     if user in [e.username for e in app.experts.values()]:
                         yield app
 
-                elif user is None or app.owner == user:
+                elif user is None or app.owner.strip() == user.strip():
                     yield app
 
     @classmethod
