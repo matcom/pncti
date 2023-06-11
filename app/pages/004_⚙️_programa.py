@@ -333,7 +333,8 @@ with sections[1]:
             evaluation = tab.text_input(
                     label="Evaluación final del experto", 
                     value=exp.evaluation.final_score,
-                    disabled=app.phase == Phase.execution
+                    disabled=app.phase == Phase.execution,
+                    key=f"evaluation_{exp.username}_dp"
                     )
 
             if float(evaluation) != exp.evaluation.final_score:
