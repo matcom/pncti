@@ -1,5 +1,5 @@
 import collections
-from typing import Dict
+from typing import Dict, Tuple
 from uuid import UUID, uuid4
 from pathlib import Path
 import enum
@@ -7,15 +7,21 @@ import shutil, os, zipfile, logging
 from pydantic import BaseModel, Field
 from fastapi.encoders import jsonable_encoder
 from yaml import safe_dump, safe_load
+from datetime import date, datetime
 
 class Phase(enum.Enum):
     announcement = "Convocatoria"
     execution = "Ejecución"
+    waitlist = "Esperando..."
+    finish = "Finalizado"
     
 class Status(enum.Enum):
     pending = "Pendiente"
     accept = "Completado"
     reject = "Rechazado"
+    aproved = "Aprobado"
+    not_aproved = "No Aprobado"
+    selected = "Seleccionado"
 
 class Evaluation(BaseModel):
     final_score: float = 0
@@ -66,6 +72,7 @@ class Application(BaseModel):
     experts: Dict[str, Expert] = {}
     
     phase: Phase = Phase.announcement
+    period: Tuple[int,int] = (datetime.now().year + 1, datetime.now().year + 3)
     institution: str = "No definida"
     code: str = "No definido"
 

@@ -1,3 +1,4 @@
+from logging import disable
 import pandas as pd
 import streamlit as st
 import yaml
@@ -7,6 +8,7 @@ from models import Application, Status, Expert, Evaluation, Phase
 from utils import show_app_state
 from tools import send_from_template
 from fastapi.encoders import jsonable_encoder
+from datetime import datetime
 
 
 st.set_page_config(page_title="Proyectos UH - Programa", page_icon="⚙️", layout="wide")
@@ -137,15 +139,21 @@ def move_app(app: Application):
 def final_review(app: Application):
     "Revisión final del proyecto"
     
-    value = st.selectbox("Dictamen", ["Aceptar", "Rechazar"])
+    value = st.selectbox("Dictamen", ["Seleccionado", "Aprobado", "No Aprobado"])
 
     def final_review(app, value):
-        if value == "Aceptar":
-            app.phase = Phase.execution
-            app.project_type = "Certificación"
-            app.experts = {}
+        if value == "Seleccionado":
+            # app.phase = Phase.waitlist
+            # app.project_type = "Certificación"
+            app.overal_review = Status.selected
+            app.period = (datetime.now().year + 1, datetime.now().year + 3)
+            # app.experts = {}
         else:
-            app.phase = Phase.announcement
+            if value == "Aprobado":
+                app.overal_review = Status.aproved
+            elif value == "No Aprobado":
+                app.overal_review = Status.not_aproved
+            # app.phase = Phase.announcement
 
         app.save()
 
@@ -321,10 +329,23 @@ with sections[1]:
             
             if exp.notify:
                 tab.info("El experto fue notificado", icon="ℹ️")
-                
+            
+            evaluation = tab.text_input(
+                    label="Evaluación final del experto", 
+                    value=exp.evaluation.final_score,
+                    disabled=app.phase == Phase.execution
+                    )
+
+            if float(evaluation) != exp.evaluation.final_score:
+                exp.evaluation.final_score = evaluation
+                exp.evaluation.review = Status.accept
+                tab.success("Evaluación guardada satisfactoriamente", icon="✅")
+                app.save()
+    
             email_form(tab, "program", exp.username, f"expert_{i}",
                        program=st.session_state.program, 
-                       user=roles[st.session_state.program]["Dirección de Programa"][st.session_state.user])
+                       user=roles[st.session_state.program]["Dirección de Programa"][st.session_state.user]
+                       )
                     
             tab.button(label="⛔ Quitar asignación", on_click=unassign_expert, args=[app, evaluators[i]], key=f"u_expert{i}_{app.uuid}")
     

@@ -94,19 +94,18 @@ def show_app_state(app, expert=False):
             new_code = st.text_input("Código del proyecto", value=app.code, disabled=app.phase.value != Phase.execution.value or st.session_state.role != "Dirección de Programa")
             st.button("💾 Modificar", on_click=update_app, args=(app, new_title, new_type, new_institution, new_owner, new_code))
 
+        def report_status(title, value: Status):
+            if value == Status.pending or value == Status.aproved:
+                st.warning(f"🟡 {title}: **{value.value}**")
+            elif value == Status.reject or value == Status.not_aproved:
+                st.error(f"🔴 {title}: **{value.value}**")
+            elif value == Status.accept or value == Status.selected:
+                st.success(f"🟢 {title}: **{value.value}**")
+        if app.phase == Phase.announcement:  
             st.write("#### Estado de la aplicación")
-
-        def report_status(title, value):
-            if value == Status.pending:
-                st.warning(f"🟡 {title}: **Pendiente**")
-            elif value == Status.reject:
-                st.error(f"🔴 {title}: **Rechazado**")
-            elif value == Status.accept:
-                st.success(f"🟢 {title}: **Completado**")
-
-        report_status("Revisión de la documentación inicial", app.doc_review)
-        for key,value in app.experts.items():
-            report_status(f"Evaluación del {key}", value.evaluation.review)
-        report_status("Evaluación Final", app.overal_review)
+            report_status("Revisión de la documentación inicial", app.doc_review)
+            for key,value in app.experts.items():
+                report_status(f"Evaluación del {key}", value.evaluation.review)
+            report_status("Evaluación Final", app.overal_review)
 
     return left, right
