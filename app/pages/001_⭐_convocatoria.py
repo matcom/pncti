@@ -13,7 +13,7 @@ info = yaml.safe_load(open("/src/data/info.yml"))
 config = yaml.safe_load(open("/src/data/config.yml"))
 
 program = config['programs'][st.session_state.program]
-announcement = program['announcement']
+announcement = program['Convocatoria']
 st.header(
     announcement['header']
 )
