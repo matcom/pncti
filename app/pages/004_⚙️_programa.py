@@ -9,7 +9,7 @@ from utils import show_app_state
 from tools import send_from_template
 from fastapi.encoders import jsonable_encoder
 from datetime import datetime
-from tools import checker
+# from tools import checker
 
 st.set_page_config(page_title="Proyectos UH - Programa", page_icon="⚙️", layout="wide")
 user = auth.authenticate()
@@ -290,12 +290,12 @@ def add_project():
                        disabled=not (title and owner and phase and project_type and institution and code),
                        key=f"add-project{st.session_state.program}")
 
-def update_database() -> None:
-    "Actualizar campos de la Base de Datos"
-    if st.session_state.user == "mvilasvaliente@gmail.com" or st.session_state.user == "develop":
-        st.button(label="Actualizar BD", on_click=checker.check_apps, kwargs={"program":st.session_state.program.lower()})
-    else:
-        st.error(icon="🚨", body="Usted no tiene acceso a esta función")
+# def update_database() -> None:
+#     "Actualizar campos de la Base de Datos"
+#     if st.session_state.user == "mvilasvaliente@gmail.com" or st.session_state.user == "develop":
+#         st.button(label="Actualizar BD", on_click=checker.check_apps, kwargs={"program":st.session_state.program.lower()})
+#     else:
+#         st.error(icon="🚨", body="Usted no tiene acceso a esta función")
 
 with sections[1]:
     st.write(f"#### Evaluación de los expertos")
@@ -359,7 +359,7 @@ with sections[1]:
                     
             tab.button(label="⛔ Quitar asignación", on_click=unassign_expert, args=[app, evaluators[i]], key=f"u_expert{i}_{app.uuid}")
     
-manage = {func.__doc__: func for func in [add_user, del_user, add_project, update_database]}    
+manage = {func.__doc__: func for func in [add_user, del_user, add_project]}    
 
 with sections[2]:
     st.info("Recuerde presionar Enter para que se guarden los campos correctamente", icon="ℹ️")
