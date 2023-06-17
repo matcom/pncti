@@ -9,7 +9,7 @@ from utils import show_app_state
 from tools import send_from_template
 from fastapi.encoders import jsonable_encoder
 from datetime import datetime
-# from tools import checker
+from pathlib import Path
 
 st.set_page_config(page_title="Proyectos UH - Programa", page_icon="⚙️", layout="wide")
 user = auth.authenticate()
@@ -96,6 +96,37 @@ if not app.experts:
                                                            evaluation=Evaluation(coeficent=program[phase]["project_types"][app.project_type][key]))
     app.save()
      
+
+class checker:
+    @staticmethod
+    def check_apps(program: str) -> None:
+        structure = yaml.safe_load(open("/src/data/config.yml"))["structure"]
+        program_folder = Path(f"/src/data/programs/{program}")
+        for file in (program_folder/"applications").glob("*.yml"):
+            Application(**yaml.safe_load(file.open())).save()
+            app = yaml.safe_load(file.open())
+            # checker._check_fields(structure=structure, app=app)
+            checker._check_period(app=app)
+            # checker._check_phase(app=app)
+
+            yaml.safe_dump(app, file.open(mode='w'))
+    @staticmethod         
+    def _check_fields(structure: str, app: dict) -> dict:
+        fields = []
+        for field in app:
+            if field not in structure:
+                fields.append(field)
+        for field in fields:
+            del app[field]
+        return app
+    
+    @staticmethod         
+    def _check_period(app: dict) -> dict:
+        phase: str = app["phase"]
+        period: tuple = app["period"]
+        if phase == "Ejecución" and not (period[0] <= datetime.now().year <= period[1]):
+            app["period"] = (2021,2023)
+        return app
 
 def email_form(struct, template, to_email, key, **kwargs):
     with struct.expander("📧 Enviar correo"):
@@ -290,12 +321,12 @@ def add_project():
                        disabled=not (title and owner and phase and project_type and institution and code),
                        key=f"add-project{st.session_state.program}")
 
-# def update_database() -> None:
-#     "Actualizar campos de la Base de Datos"
-#     if st.session_state.user == "mvilasvaliente@gmail.com" or st.session_state.user == "develop":
-#         st.button(label="Actualizar BD", on_click=checker.check_apps, kwargs={"program":st.session_state.program.lower()})
-#     else:
-#         st.error(icon="🚨", body="Usted no tiene acceso a esta función")
+def update_database() -> None:
+    "Actualizar campos de la Base de Datos"
+    if st.session_state.user == "mvilasvaliente@gmail.com" or st.session_state.user == "develop":
+        st.button(label="Actualizar BD", on_click=checker.check_apps, kwargs={"program":st.session_state.program.lower()})
+    else:
+        st.error(icon="🚨", body="Usted no tiene acceso a esta función")
 
 with sections[1]:
     st.write(f"#### Evaluación de los expertos")
@@ -359,7 +390,7 @@ with sections[1]:
                     
             tab.button(label="⛔ Quitar asignación", on_click=unassign_expert, args=[app, evaluators[i]], key=f"u_expert{i}_{app.uuid}")
     
-manage = {func.__doc__: func for func in [add_user, del_user, add_project]}    
+manage = {func.__doc__: func for func in [add_user, del_user, add_project, update_database]}    
 
 with sections[2]:
     st.info("Recuerde presionar Enter para que se guarden los campos correctamente", icon="ℹ️")
