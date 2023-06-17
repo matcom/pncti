@@ -392,3 +392,19 @@ roles:
   - "Experto"
   - "Dirección de Programa"
   - "Apoyo de Programa"
+
+structure:
+  - uuid
+  - title
+  - project_type
+  - program
+  - owner
+  - path
+  - moved
+  - doc_review
+  - overal_review
+  - experts
+  - phase
+  - period
+  - institution
+  - code

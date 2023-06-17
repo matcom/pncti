@@ -12,8 +12,8 @@ from datetime import date, datetime
 class Phase(enum.Enum):
     announcement = "Convocatoria"
     execution = "Ejecución"
-    waitlist = "Esperando..."
-    finish = "Finalizado"
+    # waitlist = "Esperando..."
+    # finish = "Finalizado"
     
 class Status(enum.Enum):
     pending = "Pendiente"
@@ -150,14 +150,13 @@ class Application(BaseModel):
             fp.write(doc.getbuffer())
 
     @classmethod
-    def _load_from(cls, program: str, phase: str, user: str=None, expert: bool=False):
+    def _load_from(cls, program: str, phase: str, user: str=None, expert: bool=False, period: tuple = None):
         for file in Path(f"/src/data/programs/{program.lower()}/applications").glob("*.yml"):
             app = Application(**safe_load(file.open()))
-
             if app.program != program:
                 continue
             
-            if app.phase.value == phase:
+            if app.phase.value == phase and app.period == period:
                 if expert:
                     if user in [e.username for e in app.experts.values()]:
                         yield app
@@ -166,10 +165,10 @@ class Application(BaseModel):
                     yield app
 
     @classmethod
-    def load_from(cls, program, phase="announcement", user=None, expert=False):
+    def load_from(cls, program, phase="announcement", user=None, expert=False, period=None):
         result = collections.defaultdict(lambda: None)
 
-        for app in Application._load_from(program, phase, user, expert):
+        for app in Application._load_from(program, phase, user, expert, period):
             result[app.title] = app
 
         return result

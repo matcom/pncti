@@ -9,7 +9,7 @@ from utils import show_app_state
 from tools import send_from_template
 from fastapi.encoders import jsonable_encoder
 from datetime import datetime
-
+from tools import checker
 
 st.set_page_config(page_title="Proyectos UH - Programa", page_icon="⚙️", layout="wide")
 user = auth.authenticate()
@@ -25,7 +25,10 @@ if st.session_state.role != "Dirección de Programa":
 
 phases = [Phase.announcement, Phase.execution]
 phase = st.select_slider("Mostrar proyectos en:", map(lambda x: x.value, phases), value=Phase.execution.value)
-applications = Application.load_from(program=st.session_state.program, phase=phase)
+conv = lambda x: tuple([int(i) for i in x.split("-")])
+period = conv(st.selectbox("Seleccionar período", options=["2021-2023", "2024-2026"], index=0 if phase == "Ejecución" else 1))
+
+applications = Application.load_from(program=st.session_state.program, phase=phase, period=period)
 
 df, exp_df = [], []
 
@@ -143,16 +146,15 @@ def final_review(app: Application):
 
     def final_review(app, value):
         if value == "Seleccionado":
-            # app.phase = Phase.waitlist
-            # app.project_type = "Certificación"
+            app.phase = Phase.execution
+            app.project_type = "Certificación"
             app.overal_review = Status.selected
             app.period = (datetime.now().year + 1, datetime.now().year + 3)
-            # app.experts = {}
-        else:
-            if value == "Aprobado":
-                app.overal_review = Status.aproved
-            elif value == "No Aprobado":
-                app.overal_review = Status.not_aproved
+            app.experts = {}
+        elif value == "Aprobado":
+            app.overal_review = Status.aproved
+        elif value == "No Aprobado":
+            app.overal_review = Status.not_aproved
             # app.phase = Phase.announcement
 
         app.save()
@@ -287,7 +289,14 @@ def add_project():
                        args=(title, owner, phase, project_type, institution, code), 
                        disabled=not (title and owner and phase and project_type and institution and code),
                        key=f"add-project{st.session_state.program}")
-    
+
+def update_database() -> None:
+    "Actualizar campos de la Base de Datos"
+    if st.session_state.user == "mvilasvaliente@gmail.com" or st.session_state.user == "develop":
+        st.button(label="Actualizar BD", on_click=checker.check_apps, kwargs={"program":st.session_state.program.lower()})
+    else:
+        st.error(icon="🚨", body="Usted no tiene acceso a esta función")
+
 with sections[1]:
     st.write(f"#### Evaluación de los expertos")
     anexo = config["programs"][app.program][app.phase.value]["project_types"][app.project_type]["doc"]
@@ -350,7 +359,7 @@ with sections[1]:
                     
             tab.button(label="⛔ Quitar asignación", on_click=unassign_expert, args=[app, evaluators[i]], key=f"u_expert{i}_{app.uuid}")
     
-manage = {func.__doc__: func for func in [add_user, del_user, add_project]}    
+manage = {func.__doc__: func for func in [add_user, del_user, add_project, update_database]}    
 
 with sections[2]:
     st.info("Recuerde presionar Enter para que se guarden los campos correctamente", icon="ℹ️")

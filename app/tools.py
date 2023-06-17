@@ -10,11 +10,56 @@ from email.mime.text import MIMEText
 from pathlib import Path
 from string import Template
 from typing import List, Union
+from yaml import safe_load, safe_dump
+from datetime import datetime
+from models import Application
 
 import docx
 from openpyxl import load_workbook
+import logging
+class checker:
+    @staticmethod
+    def check_apps(program: str) -> None:
+        structure = safe_load(open("/src/data/config.yml"))["structure"]
+        program_folder = Path(f"/src/data/programs/{program}")
+        logging.info(f"Actualizando la base de datos del programa {program}")
+        for file in (program_folder/"applications").glob("*.yml"):
+            Application(**safe_load(file.open())).save()
+            app = safe_load(file.open())
+            checker._check_fields(structure=structure, app=app)
+            checker._check_period(app=app)
+            checker._check_phase(app=app)
 
-
+            safe_dump(app, file.open(mode='w'))
+    @staticmethod         
+    def _check_fields(structure: str, app: dict) -> dict:
+        fields = []
+        for field in app:
+            if field not in structure:
+                fields.append(field)
+        for field in fields:
+            logging.info(f"Eliminando el campo {field} del proyecto {app['title']}")
+            del app[field]
+        return app
+    
+    @staticmethod         
+    def _check_period(app: dict) -> dict:
+        phase: str = app["phase"]
+        period: tuple = app["period"]
+        if phase == "Ejecución" and not (period[0] <= datetime.now().year <= period[1]):
+            logging.info(f"Cambiando período del proyecto {app['title']}")
+            app["period"] = (2021,2023)
+        return app
+    
+    @staticmethod
+    def _check_phase(app: dict) -> dict:
+        phase: str = app["phase"]
+        overal_review = app["overal_review"]
+        if overal_review == "Seleccionado" and phase == "Convocatoria":
+            logging.info(f"Cambiando fase del proyecto {app['title']}")
+            app["phase"] = "Ejecución"
+            app["experts"] = {}
+        return app
 class EmailSender:
     @staticmethod
     def _sender_email_target(from_email, to_email, subject, text, server):

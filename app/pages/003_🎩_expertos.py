@@ -17,7 +17,10 @@ if st.session_state.role != "Experto":
 
 phases = [Phase.announcement, Phase.execution]
 phase = st.select_slider("Mostrar proyectos en:", map(lambda x: x.value, phases), value=Phase.execution.value)
-applications = Application.load_from(program=st.session_state.program, user=st.session_state.user, phase=phase, expert=True)
+conv = lambda x: tuple([int(i) for i in x.split("-")])
+period = conv(st.selectbox("Seleccionar período", options=["2021-2023", "2024-2026"], index=0 if phase == "Ejecución" else 1))
+
+applications = Application.load_from(program=st.session_state.program, phase=phase, expert=True, period=period)
 
 st.info(f"Usted tiene **{len(applications)}** proyectos asignados.")
 
