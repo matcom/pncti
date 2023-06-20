@@ -22,7 +22,7 @@ phase = st.select_slider("Mostrar proyectos en:", map(lambda x: x.value, phases)
 conv = lambda x: tuple([int(i) for i in x.split("-")])
 period = conv(st.selectbox("Seleccionar período", options=["2021-2023", "2024-2026"], index=0 if phase == "Ejecución" else 1))
 
-applications = Application.load_from(program=st.session_state.program, phase=phase, period=period)
+applications = Application.load_from(program=st.session_state.program, user=st.session_state.user, phase=phase, period=period)
 st.info(f"Usted tiene **{len(applications)}** proyectos enviadas.")
 
 if not applications:
