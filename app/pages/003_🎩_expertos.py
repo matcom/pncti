@@ -33,7 +33,7 @@ app.save()
 
 left, right = show_app_state(app, expert=True)
 
-with right:
+with left:
     st.write("#### Evaluación")
 
     anexo = config["programs"][app.program][phase]["project_types"][app.project_type]["doc"]
@@ -42,19 +42,37 @@ with right:
     file_name_u = config["docs"][anexo]["upload"]["file_name"]
     extension_u = config["docs"][anexo]["upload"]["extension"]
 
-    uploaded = st.file_uploader(
-        f"Subir {name}",
-        extension_u,
-        key=anexo
-    )
-
+    last_version = app.file(file_name_u, expert=st.session_state.user)
+    if last_version:
+        st.info(f"Ya usted subió el **{name}** para este proyecto", icon="ℹ️")
+    else:
+        st.info(f"Usted no ha subido el **{name}** para este proyecto", icon="ℹ️")
     value = st.number_input(label="Evaluación Final", 
                             max_value=config["programs"][st.session_state.program][phase]["project_types"][app.project_type]["max_value"], 
                             min_value=0, 
                             step=5,
                             disabled=app.phase.value != "Convocatoria")
-
-    last_version = app.file(file_name_u, expert=st.session_state.user)
+    
+    uploaded = st.file_uploader(
+        f"Subir {name}",
+        extension_u,
+        key=f"{anexo}_{app.uuid}"
+    )
+    
+    if uploaded:
+        save = st.button("Guardar", 
+                  on_click=app.save_expert_eval, 
+                  kwargs=dict(
+                      expert=st.session_state.user, 
+                      file_name=anexo,
+                      doc=uploaded,
+                      extension=extension_u
+                      )
+                  )
+        if save:
+            st.success("Evaluación guardada satisfactoriamente", icon="✅")
+            st.balloons()
+            
     if last_version:
         for role, expert in app.experts.items():
             if st.session_state.user == expert.username:
@@ -74,11 +92,3 @@ with right:
         st.download_button(
         f"⏬ Descargar plantilla del {name}", open(f"{st.session_state.path}/docs/{file_name_d}", "rb").read(), file_name=file_name_d
     )
-          
-    if uploaded:
-        app.save_expert_eval(expert=st.session_state.user, 
-                             file_name=anexo,
-                             doc=uploaded,
-                             extension=extension_u)
-        st.success("Evaluación guardada satisfactoriamente", icon="✅")
-        st.balloons()
