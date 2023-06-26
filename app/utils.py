@@ -35,7 +35,7 @@ def show_docs(app: Application, docs: list, replaceable: bool = True):
             )
 
             if uploaded:
-                st.button("💾 Reemplazar", on_click=replace_file, args=(app, file_name_u, uploaded.getbuffer()), key=f"{key}_replace")
+                st.button("💾 Reemplazar" if exist else "💾 Subir", on_click=replace_file, args=(app, file_name_u, uploaded.getbuffer()), key=f"{key}_replace")
         
         if exist:
             st.download_button(
