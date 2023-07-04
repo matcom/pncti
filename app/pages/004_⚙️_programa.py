@@ -356,26 +356,28 @@ with sections[1]:
                 tab.warning("No hay evaluación de este experto", icon="⚠️")
                 
             uploaded = tab.file_uploader(
-                            f"Subir {name}",
-                            extension_u,
-                            key=f"up{anexo}{exp.username}"
-                        )
+                f"Subir {name}",
+                extension_u,
+                key=f"up{anexo}{exp.username}"
+            )
             if uploaded:
-                app.save_expert_eval(expert=exp.username, 
-                                    file_name=anexo,
-                                    doc=uploaded,
-                                    extension=extension_u)
+                app.save_expert_eval(
+                    expert=exp.username, 
+                    file_name=anexo,
+                    doc=uploaded,
+                    extension=extension_u
+                )
                 st.success("Evaluación guardada satisfactoriamente", icon="✅")
             
             if exp.notify:
                 tab.info("El experto fue notificado", icon="ℹ️")
             
             evaluation = tab.text_input(
-                    label="Evaluación final del experto", 
-                    value=exp.evaluation.final_score,
-                    disabled=app.phase == Phase.execution,
-                    key=f"evaluation_{exp.username}_dp"
-                    )
+                label="Evaluación final del experto", 
+                value=exp.evaluation.final_score,
+                disabled=app.phase == Phase.execution,
+                key=f"evaluation_{exp.username}_dp"
+            )
 
             if float(evaluation) != exp.evaluation.final_score:
                 exp.evaluation.final_score = evaluation
@@ -386,7 +388,7 @@ with sections[1]:
             email_form(tab, "program", exp.username, f"expert_{i}",
                        program=st.session_state.program, 
                        user=roles[st.session_state.program]["Dirección de Programa"][st.session_state.user]
-                       )
+            )
                     
             tab.button(label="⛔ Quitar asignación", on_click=unassign_expert, args=[app, evaluators[i]], key=f"u_expert{i}_{app.uuid}")
     
