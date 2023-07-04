@@ -21,7 +21,7 @@ def update_app(app, title, type, institution, owner, code):
     st.success(f"Aplicación **{app.title}** modificada con éxito.")
 
 def show_docs(app: Application, docs: list, replaceable: bool = True):
-    for key in (docs):
+    for i,key in enumerate(docs):
         name = config["docs"][key]["name"]
         file_name_u = config["docs"][key]["upload"]["file_name"]
         extension_u = config["docs"][key]["upload"]["extension"]
@@ -31,7 +31,7 @@ def show_docs(app: Application, docs: list, replaceable: bool = True):
             uploaded = st.file_uploader(
                 f"Reemplazar {name}" if exist else f"Subir {name}",
                 extension_u,
-                key=key,
+                key=f"{key}_{app.uuid}_{i}",
             )
 
             if uploaded:
