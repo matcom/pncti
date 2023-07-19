@@ -21,6 +21,7 @@ def update_app(app, title, type, institution, owner, code):
     st.success(f"Aplicación **{app.title}** modificada con éxito.")
 
 def show_docs(app: Application, docs: list, replaceable: bool = True):
+    if len(docs) == 0: st.info("No hay documentos para mostrar", icon="ℹ️")
     for i,key in enumerate(docs):
         name = config["docs"][key]["name"]
         file_name_u = config["docs"][key]["upload"]["file_name"]
@@ -74,13 +75,11 @@ def show_app_state(app, expert=False):
                             f"⏬ Descargar última versión subida del {name}", exp_file, file_name=file_name_u)
                     else:
                         st.warning("No hay evaluación de este experto", icon="⚠️")
-
         # Admin docs
-        if (app.phase.value == "Ejecución"):
-            st.write("**Documentos de la Dirección del Programa**")
-            show_docs(app=app, 
-                    docs=config["programs"][app.program][app.phase.value]["dir_program"]["docs"],
-                    replaceable=st.session_state.role == "Dirección de Programa")
+        st.write("**Documentos de la Dirección del Programa**")
+        show_docs(app=app, 
+                docs=config["programs"][app.program][app.phase.value]["dir_program"]["docs"],
+                replaceable=st.session_state.role == "Dirección de Programa")
     with left:
         if not expert:
             st.write("#### Modificar metadatos")
