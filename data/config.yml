@@ -61,7 +61,8 @@ programs:
         - review_docs
         - final_review
       dir_program:
-        docs: []
+        docs: 
+          - anexo7
     Ejecución:
       docs:
         informe: 
@@ -361,6 +362,14 @@ docs:
     upload:
       extension: xlsx
       file_name: Anexo6.xlsx
+  anexo7:
+    name: Anexo 7
+    download:
+      extension: docx
+      file_name: Anexo7.docx
+    upload:
+      extension: pdf
+      file_name: Anexo7.pdf
   anexo16:
     name: Anexo 16
     download:
