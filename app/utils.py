@@ -80,6 +80,12 @@ def show_app_state(app, expert=False):
         show_docs(app=app, 
                 docs=config["programs"][app.program][app.phase.value]["dir_program"]["docs"],
                 replaceable=st.session_state.role == "Dirección de Programa")
+        # Final phase docs
+        # if app.phase.value == "Ejecución":
+        #     st.write("**Documentos Finales**")
+        #     show_docs(app=app, 
+        #             docs=config["programs"][app.program][app.phase.value]["final"]["docs"],
+        #             replaceable=st.session_state.role == "Dirección de Proyecto")
     with left:
         if not expert:
             st.write("#### Modificar metadatos")

@@ -65,11 +65,17 @@ programs:
           - anexo7
     Ejecución:
       docs:
-        informe: 
-          download: False
+        anexo3:
+          download: True
           upload: True
-        avalCCert:
-          download: False
+        anexo11: 
+          download: True
+          upload: True
+        anexo13:
+          download: True
+          upload: True
+        anexo20:
+          download: True
           upload: True
         planResultados:
           download: False
@@ -88,8 +94,11 @@ programs:
         - move_app
       dir_program:
         docs:
-          - anexo16
-          - anexo19
+          - infos
+      final:
+        docs:
+          - anexo22
+          - avalCCFinal
 
   PIUH:
     name: PIUH - Proyectos Institucionales UH
@@ -184,6 +193,10 @@ programs:
         docs:
           - anexo16
           - anexo19
+      final:
+        docs:
+          - anexo22
+          - avalCCFinal
 
   CSH:
     name: CSH - Ciencias Sociales y Humanidades
@@ -272,16 +285,20 @@ programs:
         docs:
           - anexo16
           - anexo19
+      final:
+        docs:
+          - anexo22
+          - avalCCFinal
 
 docs:
-  anexo3:
-    name: Anexo 3
+  infos:
+    name: Informaciones Generales
     download:
-      extension: docx
-      file_name: Anexo3.docx
+      extension: pdf
+      file_name: Informaciones.pdf
     upload:
-      extension: docx
-      file_name: Anexo3.docx
+      extension: pdf
+      file_name: Informaciones.pdf
   avalCC:
     name: Aval del Consejo Científico
     download:
@@ -338,6 +355,14 @@ docs:
     upload:
       extension: pdf
       file_name: Carta.pdf
+  anexo3:
+    name: Anexo 3
+    download:
+      extension: docx
+      file_name: Anexo3.docx
+    upload:
+      extension: docx
+      file_name: Anexo3.docx
   anexo4:
     name: Anexo 4
     download:
@@ -370,6 +395,22 @@ docs:
     upload:
       extension: pdf
       file_name: Anexo7.pdf
+  anexo11:
+    name: Anexo 11
+    download:
+      extension: docx
+      file_name: Anexo11.docx
+    upload:
+      extension: pdf
+      file_name: Anexo11.pdf
+  anexo13:
+    name: Anexo 13
+    download:
+      extension: docx
+      file_name: Anexo13.docx
+    upload:
+      extension: pdf
+      file_name: Anexo13.pdf
   anexo16:
     name: Anexo 16
     download:
@@ -394,6 +435,14 @@ docs:
     upload:
       extension: pdf
       file_name: Anexo19.pdf
+  anexo20:
+    name: Anexo 20
+    download:
+      extension: docx
+      file_name: Anexo20.docx
+    upload:
+      extension: pdf
+      file_name: Anexo20.pdf
   
 
 roles:
