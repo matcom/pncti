@@ -92,13 +92,60 @@ programs:
           max_value: 100
       actions:
         - move_app
+        - finished_app
       dir_program:
         docs:
-          - infos
+          instrucciones:
+            download: True
+            upload: False
       final:
         docs:
-          - anexo22
-          - avalCCFinal
+          anexo22:
+            download: True
+            upload: True
+          avalCCFinal:
+            download: True
+            upload: True
+    Finalizado:
+      docs:
+        anexo3:
+          download: False
+          upload: True
+        avalCC:
+          download: False
+          upload: True
+        presupuesto:
+          download: False
+          upload: True
+        anexo11: 
+          download: False
+          upload: True
+        anexo13:
+          download: False
+          upload: True
+        anexo20:
+          download: False
+          upload: True
+        planResultados:
+          download: False
+          upload: True
+      project_types:
+        Finalizado:
+          doc: anexo18
+          regular: 1
+          max_value: 100
+      experts:
+        regular:
+          number: 2
+          name: Experto
+          form: standard
+      actions:
+        - nothing
+      dir_program:
+        docs:
+          instrucciones:
+            download: True
+            upload: False
 
   PIUH:
     name: PIUH - Proyectos Institucionales UH
@@ -291,14 +338,14 @@ programs:
           - avalCCFinal
 
 docs:
-  infos:
-    name: Informaciones Generales
+  instrucciones:
+    name: Instrucciones
     download:
       extension: pdf
-      file_name: Informaciones.pdf
+      file_name: Instrucciones.pdf
     upload:
       extension: pdf
-      file_name: Informaciones.pdf
+      file_name: Instrucciones.pdf
   avalCC:
     name: Aval del Consejo Científico
     download:

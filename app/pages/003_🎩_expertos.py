@@ -2,7 +2,7 @@ import streamlit as st
 import auth
 import yaml
 from models import Application, Status, Phase
-from utils import show_app_state
+from utils import show_app_state, phases_template
 
 st.set_page_config(page_title="Proyectos UH - Expertos", page_icon="🎩", layout="wide")
 user = auth.authenticate()
@@ -15,10 +15,7 @@ if st.session_state.role != "Experto":
     st.warning("⚠️ Esta sección solo está disponible para el rol de **Experto**.")
     st.stop()
 
-phases = [Phase.announcement, Phase.execution]
-phase = st.select_slider("Mostrar proyectos en:", map(lambda x: x.value, phases), value=Phase.execution.value)
-conv = lambda x: tuple([int(i) for i in x.split("-")])
-period = conv(st.selectbox("Seleccionar período", options=["2021-2023", "2024-2026"], index=0 if phase == "Ejecución" else 1))
+phases, phase, conv, period = phases_template()
 
 applications = Application.load_from(program=st.session_state.program, user=st.session_state.user, phase=phase, expert=True, period=period)
 

@@ -3,8 +3,8 @@ import random, datetime
 from yaml import safe_load
 import auth
 
-from models import Application, Status, Phase
-from utils import show_app_state
+from models import Application
+from utils import show_app_state, phases_template
 
 
 st.set_page_config("Proyectos UH - Proyectos", page_icon="📑", layout="wide")
@@ -17,10 +17,7 @@ if st.session_state.role != "Dirección de Proyecto":
     st.warning("⚠️ Esta sección solo está disponible para el rol de **Dirección de Proyecto**.")
     st.stop()
 
-phases = [Phase.announcement, Phase.execution]
-phase = st.select_slider("Mostrar proyectos en:", map(lambda x: x.value, phases), value=Phase.execution.value)
-conv = lambda x: tuple([int(i) for i in x.split("-")])
-period = conv(st.selectbox("Seleccionar período", options=["2021-2023", "2024-2026"], index=0 if phase == "Ejecución" else 1))
+phases, phase, conv, period = phases_template()
 
 applications = Application.load_from(program=st.session_state.program, user=st.session_state.user, phase=phase, period=period)
 st.info(f"Usted tiene **{len(applications)}** proyectos enviadas.")

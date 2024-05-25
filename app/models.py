@@ -13,7 +13,7 @@ class Phase(enum.Enum):
     announcement = "Convocatoria"
     execution = "Ejecución"
     # waitlist = "Esperando..."
-    # finish = "Finalizado"
+    finished = "Finalizado"
     
 class Status(enum.Enum):
     pending = "Pendiente"
@@ -22,6 +22,7 @@ class Status(enum.Enum):
     aproved = "Aprobado"
     not_aproved = "No Aprobado"
     selected = "Seleccionado"
+    end = "Finalizado"
 
 class Evaluation(BaseModel):
     final_score: float = 0
