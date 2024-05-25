@@ -1,6 +1,6 @@
 .PHONY: dev
 dev:
-	USER=`id -u` docker compose up app
+	USER=`id -u` docker-compose up app
 
 .PHONY: stage
 stage:

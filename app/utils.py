@@ -5,6 +5,13 @@ import datetime
 
 config = safe_load(open("/src/data/config.yml"))
 
+def phases_template():
+    phases = [Phase.announcement, Phase.execution, Phase.finished]
+    phase = st.select_slider("Mostrar proyectos en:", map(lambda x: x.value, phases), value=Phase.execution.value)
+    conv = lambda x: tuple([int(i) for i in x.split("-")])
+    period = conv(st.selectbox("Seleccionar período", options=["2021-2023", "2024-2026"], index=1 if phase == "Ejecución" else 1))
+    return phases, phase, conv, period
+
 def replace_file(app, file_name, buffer):
     with app.file(file_name, "wb") as fp:
         fp.write(buffer)
@@ -20,30 +27,38 @@ def update_app(app, title, type, institution, owner, code):
     app.save()
     st.success(f"Aplicación **{app.title}** modificada con éxito.")
 
-def show_docs(app: Application, docs: list, replaceable: bool = True):
-    if len(docs) == 0: st.info("No hay documentos para mostrar", icon="ℹ️")
+def show_docs(app: Application, documents: dict, replaceable: bool = True):
+    if len(documents) == 0: st.info("No hay documentos para mostrar", icon="ℹ️")
+    docs = documents.keys()
     for i,key in enumerate(docs):
         name = config["docs"][key]["name"]
         file_name_u = config["docs"][key]["upload"]["file_name"]
         extension_u = config["docs"][key]["upload"]["extension"]
+        file_name_d = config["docs"][key]["download"]["file_name"]
         
         exist =  app.file(file_name_u)
-        if replaceable:
-            uploaded = st.file_uploader(
-                f"Reemplazar {name}" if exist else f"Subir {name}",
-                extension_u,
-                key=f"{key}_{app.uuid}_{i}",
-            )
+        if documents[key]["upload"]:
+            if replaceable:
+                uploaded = st.file_uploader(
+                    f"Reemplazar {name}" if exist else f"Subir {name}",
+                    extension_u,
+                    key=f"{key}_{app.uuid}_{i}",
+                )
 
-            if uploaded:
-                st.button("💾 Reemplazar" if exist else "💾 Subir", on_click=replace_file, args=(app, file_name_u, uploaded.getbuffer()), key=f"{key}_replace")
-        
-        if exist:
+                if uploaded:
+                    st.button("💾 Reemplazar" if exist else "💾 Subir", on_click=replace_file, args=(app, file_name_u, uploaded.getbuffer()), key=f"{key}_replace")
+            
+            if exist:
+                st.download_button(
+                    f"📄 Descargar {name}", app.file(file_name_u).read(), file_name_u
+                )
+            else:
+                st.warning(f"No se ha subido el {name}", icon="⚠️")
+            
+        if documents[key]["download"]:
             st.download_button(
-                f"📄 Descargar {name}", app.file(file_name_u).read(), file_name_u
+                f"⏬ Descargar Modelo {name}", open(f"{st.session_state.path}/docs/{file_name_d}", "rb").read(), file_name=file_name_d
             )
-        else:
-            st.warning(f"No se ha subido el {name}", icon="⚠️")
 
 def show_app_state(app, expert=False):
     st.write(f"### {app.title} - {app.project_type}")
@@ -55,7 +70,7 @@ def show_app_state(app, expert=False):
         st.download_button("📦 Descargarla toda", app.zip_file(), file_name=f"{app.title}.zip", help="Descarga un comprimido con todos los archivos del proyecto")
         # App docs
         show_docs(app=app, 
-                  docs=config["programs"][app.program][app.phase.value]["docs"].keys(), 
+                  documents=config["programs"][app.program][app.phase.value]["docs"], 
                   replaceable=not expert)
         # Expert docs
         if (app.phase.value == "Ejecución" and 
@@ -78,8 +93,14 @@ def show_app_state(app, expert=False):
         # Admin docs
         st.write("**Documentos de la Dirección del Programa**")
         show_docs(app=app, 
-                docs=config["programs"][app.program][app.phase.value]["dir_program"]["docs"],
+                documents=config["programs"][app.program][app.phase.value]["dir_program"]["docs"],
                 replaceable=st.session_state.role == "Dirección de Programa")
+        # Final phase docs
+        # if app.phase.value == "Ejecución":
+        #     st.write("**Documentos Finales**")
+        #     show_docs(app=app, 
+        #             docs=config["programs"][app.program][app.phase.value]["final"]["docs"],
+        #             replaceable=st.session_state.role == "Dirección de Proyecto")
     with left:
         if not expert:
             st.write("#### Modificar metadatos")
@@ -90,7 +111,7 @@ def show_app_state(app, expert=False):
             new_type = st.selectbox("Tipo de proyecto", program[app.phase.value]['project_types'], index=list(program[app.phase.value]['project_types']).index(app.project_type))
             new_institution = st.text_input("Nueva Institución", value=app.institution)
             new_owner = st.text_input("Correo del Jefe de Proyecto", value=app.owner, disabled=st.session_state.role != "Dirección de Programa")
-            new_code = st.text_input("Código del proyecto", value=app.code, disabled=app.phase.value != Phase.execution.value or st.session_state.role != "Dirección de Programa")
+            new_code = st.text_input("Código del proyecto", value=app.code, disabled=app.phase.value == Phase.announcement.value or st.session_state.role != "Dirección de Programa")
             st.button("💾 Modificar", on_click=update_app, args=(app, new_title, new_type, new_institution, new_owner, new_code))
 
         def report_status(title, value: Status):

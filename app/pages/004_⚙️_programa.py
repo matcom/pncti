@@ -5,7 +5,7 @@ import yaml
 import auth
 
 from models import Application, Status, Expert, Evaluation, Phase
-from utils import show_app_state
+from utils import show_app_state, phases_template
 from tools import send_from_template
 from fastapi.encoders import jsonable_encoder
 from datetime import datetime
@@ -23,10 +23,7 @@ if st.session_state.role != "Dirección de Programa":
     )
     st.stop()
 
-phases = [Phase.announcement, Phase.execution]
-phase = st.select_slider("Mostrar proyectos en:", map(lambda x: x.value, phases), value=Phase.execution.value)
-conv = lambda x: tuple([int(i) for i in x.split("-")])
-period = conv(st.selectbox("Seleccionar período", options=["2021-2023", "2024-2026"], index=0 if phase == "Ejecución" else 1))
+phases, phase, conv, period = phases_template()
 
 applications = Application.load_from(program=st.session_state.program, phase=phase, period=period)
 
@@ -48,7 +45,7 @@ for i, app in enumerate(sorted(applications.values(), key=lambda x: x.code)):
                  for key,value in app.experts.items()}
     exp_scores = {key:f"{value.evaluation.final_score}" if value.username in experts.keys() else "" 
                  for key,value in app.experts.items()}
-    if phase != "Ejecución":
+    if phase == "Convocatoria":
         exp_table["Total"] = sum([value.evaluation.coeficent * value.evaluation.final_score for key, value in app.experts.items()])
     df.append(
         dict(
@@ -61,7 +58,7 @@ for i, app in enumerate(sorted(applications.values(), key=lambda x: x.code)):
     )
     exp_df.append(
         dict(
-            No=i+1 if phase != 'Ejecución' else app.code,
+            No=i+1 if phase == 'Ejecución' else app.code,
             Título=app.title,
             Tipo=app.project_type,
             Jefe=app.owner,
@@ -170,7 +167,7 @@ def move_app(app: Application):
     st.info(f"Usted va a mover el proyecto {app.title} al programa {value}", icon="ℹ️")
     st.button("Mover", on_click=move_app, args=[app, value])  
 
-def final_review(app: Application):
+def final_review(app: Application) -> None:
     "Revisión final del proyecto"
     
     value = st.selectbox("Dictamen", ["Seleccionado", "Aprobado", "No Aprobado"])
@@ -191,15 +188,33 @@ def final_review(app: Application):
         app.save()
 
     st.button("Aplicar dictamen", on_click=final_review, args=(app, value))
+    
+def finished_app(app: Application) -> None:
+    "Cerrar proyecto"
+    
+    def finished_app(app):
+        app.phase = Phase.finished
+        app.project_type = "Finalizado"
+        app.overal_review = Status.end
+        app.experts = {}
+        app.save()
+    st.info(f"Usted va a cerrar el proyecto {app.title}", icon="ℹ️")
+    st.button("Cerrar", on_click=finished_app, args=[app])
+
+def nothing(app: Application) -> None:
+    "Nada para hacer ..."
+    return
 
 dict_actions = {
     "final_review": final_review,
+    "finished_app": finished_app,
     "move_app": move_app,
-    "review_docs": review_docs
+    "review_docs": review_docs,
+    "nothing": nothing
 }
 
 current_actions = program[phase]["actions"]
-actions = { func[1].__doc__: func[1] for func in dict_actions.items() if func[0] in current_actions}
+actions = { func.__doc__: func for action, func in dict_actions.items() if action in current_actions}
 
 def delete_application():
     app.destroy()
