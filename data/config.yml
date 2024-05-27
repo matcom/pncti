@@ -61,8 +61,10 @@ programs:
         - review_docs
         - final_review
       dir_program:
-        docs: 
-          - anexo7
+        docs:
+          anexo7:
+            download: False
+            upload: True
     Ejecución:
       docs:
         anexo3:
