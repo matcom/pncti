@@ -177,7 +177,7 @@ def final_review(app: Application) -> None:
             app.phase = Phase.execution
             app.project_type = "Certificación"
             app.overal_review = Status.selected
-            app.period = (datetime.now().year + 1, datetime.now().year + 3)
+            # app.period = (datetime.now().year + 1, datetime.now().year + 3)
             app.experts = {}
         elif value == "Aprobado":
             app.overal_review = Status.aproved
