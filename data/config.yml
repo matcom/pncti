@@ -89,7 +89,7 @@ programs:
           form: standard
       project_types:
         Certificación:
-          doc: anexo18
+          doc: anexo12
           regular: 1
           max_value: 100
       actions:
@@ -452,6 +452,14 @@ docs:
     upload:
       extension: pdf
       file_name: Anexo11.pdf
+  anexo12:
+    name: Anexo 12
+    download:
+      extension: docx
+      file_name: Anexo12.docx
+    upload:
+      extension: pdf
+      file_name: Anexo12.pdf
   anexo13:
     name: Anexo 13
     download:
