@@ -20,7 +20,7 @@ if st.session_state.role != "Dirección de Proyecto":
 phases, phase, conv, period = phases_template()
 
 applications = Application.load_from(program=st.session_state.program, user=st.session_state.user, phase=phase, period=period)
-st.info(f"Usted tiene **{len(applications)}** proyectos enviadas.")
+st.info(f"Usted tiene **{len(applications)}** proyectos enviados.")
 
 if not applications:
     st.stop()
