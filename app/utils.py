@@ -87,7 +87,7 @@ def show_app_state(app, expert=False):
                     exp_file = app.file(file_name=file_name_u, expert=exp.username)
                     if exp_file:
                         st.download_button(
-                            f"⏬ Descargar última versión subida del {name}", exp_file, file_name=file_name_u)
+                            f"⏬ Descargar última versión subida del {name}", exp_file, file_name=file_name_u, key=f"eval?{anexo}{exp.username}{app.uuid}")
                     else:
                         st.warning("No hay evaluación de este experto", icon="⚠️")
         # Admin docs
