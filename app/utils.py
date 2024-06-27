@@ -79,11 +79,11 @@ def show_app_state(app, expert=False):
             anexo = config["programs"][app.program][app.phase.value]["project_types"][app.project_type]["doc"]
             name = config["docs"][anexo]["name"]
             file_name_u = config["docs"][anexo]["upload"]["file_name"]
-            for exp in app.experts.values():
+            for i, exp in enumerate(app.experts.values()):
                 if not exp.username:
                     st.warning("No está asignado", icon="⚠️")   
                 else:
-                    st.write(f"Evaluación del experto {exp.username}")
+                    st.write(f"Evaluación del experto {i+1 if st.session_state.role == "Dirección de Proyecto" else exp.username}")
                     exp_file = app.file(file_name=file_name_u, expert=exp.username)
                     if exp_file:
                         st.download_button(

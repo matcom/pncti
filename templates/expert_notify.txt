@@ -1,7 +1,7 @@
-Aplicación asignada
+Proyecto asignado
 
 Hola $user:
-A usted se le ha asignado la aplicación $application, la cual es un proyecto de $proj_type del programa $program.
+A usted se le ha asignado el proyecto $application, el cual es un proyecto de $proj_type del programa $program.
 Ya puede comenzar su revisión. Saludos.
 
 -----

@@ -365,7 +365,7 @@ with sections[1]:
             exp_file = app.file(file_name=file_name_u, expert=exp.username)
             if exp_file:
                 tab.download_button(
-                    f"⏬ Descargar última versión subida del {name}", exp_file, file_name=file_name_u, key=f"down{anexo}{exp.username}"
+                    f"⏬ Descargar última versión subida del {name}", exp_file, file_name=file_name_u, key=f"down{anexo}{exp.username}{app.uuid}"
                 )
             else:
                 tab.warning("No hay evaluación de este experto", icon="⚠️")
