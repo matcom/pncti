@@ -83,7 +83,7 @@ def show_app_state(app, expert=False):
                 if not exp.username:
                     st.warning("No está asignado", icon="⚠️")   
                 else:
-                    st.write(f"Evaluación del experto {i+1 if st.session_state.role == "Dirección de Proyecto" else exp.username}")
+                    st.write(f"Evaluación del experto {i+1 if st.session_state.role == 'Dirección de Proyecto' else exp.username}")
                     exp_file = app.file(file_name=file_name_u, expert=exp.username)
                     if exp_file:
                         st.download_button(
