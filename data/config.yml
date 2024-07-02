@@ -100,6 +100,9 @@ programs:
           instrucciones:
             download: True
             upload: False
+          anexo21:
+            download: True
+            upload: True
       final:
         docs:
           anexo22:
@@ -500,6 +503,14 @@ docs:
     upload:
       extension: pdf
       file_name: Anexo20.pdf
+  anexo21:
+    name: Anexo 21
+    download:
+      extension: docx
+      file_name: Anexo21.docx
+    upload:
+      extension: pdf
+      file_name: Anexo21.pdf
   
 
 roles:
